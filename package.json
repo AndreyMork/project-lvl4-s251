@@ -10,6 +10,8 @@
     "dist"
   ],
   "scripts": {
+    "start": "",
+    "nodemon": "nodemon",
     "babel-node": "babel-node",
     "test": "jest",
     "test-coverage": "jest --coverage",
@@ -24,9 +26,15 @@
   },
   "author": "",
   "license": "ISC",
+  "dependencies": {
+    "debug": "^3.1.0",
+    "koa": "^2.5.1"
+  },
   "devDependencies": {
     "babel-cli": "*",
     "babel-core": "*",
+    "babel-loader": "*",
+    "babel-polyfill": "*",
     "babel-eslint": "*",
     "babel-jest": "*",
     "babel-preset-env": "*",
@@ -36,10 +44,11 @@
     "eslint-plugin-import": "*",
     "eslint-plugin-jest": "*",
     "jest": "*",
-    "jest-cli": "*"
+    "jest-cli": "*",
+    "nodemon": "*"
   },
   "bugs": {
-    "url": "https://github.com/AndreyMork/project-lvl4-s203"
+    "url": "https://github.com/AndreyMork/project-lvl4-s203/issues"
   },
   "homepage": "https://github.com/AndreyMork/project-lvl4-s203#readme"
 }
