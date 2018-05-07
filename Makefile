@@ -1,3 +1,9 @@
+start:
+	DEBUG="task-manager:*" npm run nodemon -- --watch '.' --ext '.js' --exec npm run babel-node index.js
+
+server:
+	nodemon --exec babel-node src/index.js
+
 install:
 	npm install
 
