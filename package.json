@@ -28,7 +28,13 @@
   "license": "ISC",
   "dependencies": {
     "debug": "^3.1.0",
-    "koa": "^2.5.1"
+    "dotenv": "^5.0.1",
+    "koa": "^2.5.1",
+    "koa-logger": "^3.2.0",
+    "koa-pug": "^3.0.0-2",
+    "koa-router": "^7.4.0",
+    "koa-static": "^4.0.2",
+    "rollbar": "^2.3.9"
   },
   "devDependencies": {
     "babel-cli": "*",
