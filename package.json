@@ -22,7 +22,8 @@
     "eslint": "eslint",
     "webpack": "webpack",
     "build": "npm run webpack -- -p --env production && babel src --out-dir dist --source-maps inline",
-    "prepublishOnly": "npm run build"
+    "prepublishOnly": "npm run build",
+    "postinstall": "npm run build"    
   },
   "repository": {
     "type": "git",
