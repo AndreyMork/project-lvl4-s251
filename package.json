@@ -32,6 +32,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "autoprefixer": "^8.4.1",
     "bootstrap": "^4.1.1",
     "css-loader": "^0.28.11",
     "debug": "^3.1.0",
@@ -42,6 +43,7 @@
     "koa-router": "^7.4.0",
     "koa-static": "^4.0.2",
     "koa-webpack": "^3.0.2",
+    "precss": "^3.1.2",
     "rollbar": "^2.3.9",
     "style-loader": "^0.21.0",
     "webpack": "^4.8.1"
@@ -49,10 +51,10 @@
   "devDependencies": {
     "babel-cli": "*",
     "babel-core": "*",
-    "babel-loader": "*",
-    "babel-polyfill": "*",
     "babel-eslint": "*",
     "babel-jest": "*",
+    "babel-loader": "*",
+    "babel-polyfill": "*",
     "babel-preset-env": "*",
     "babel-preset-stage-0": "*",
     "eslint": "*",
@@ -61,7 +63,8 @@
     "eslint-plugin-jest": "*",
     "jest": "*",
     "jest-cli": "*",
-    "nodemon": "*"
+    "nodemon": "*",
+    "webpack-cli": "^2.1.3"
   },
   "bugs": {
     "url": "https://github.com/AndreyMork/project-lvl4-s203/issues"
