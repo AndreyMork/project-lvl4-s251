@@ -26,7 +26,7 @@ app.use(router.routes());
 
 const rollbar = new Rollbar(process.env.ROLLBAR);
 app.on('error', (err, ctx) => {
-  rollbar.log(err.message, ctx.request);
+  rollbar.log(err, ctx.request);
 });
 
 const pug = new Pug({
