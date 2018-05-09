@@ -1,5 +1,5 @@
 start:
-	DEBUG="task-manager:*" npm run nodemon -- --watch '.' --ext '.js' --exec npm run babel-node index.js
+	DEBUG="task-manager:*" npm run nodemon -- --watch '.' --ext '.js' --exec npm run babel-node task-manager.js
 
 install:
 	npm install
