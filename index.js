@@ -9,7 +9,7 @@ import Rollbar from 'rollbar';
 
 import path from 'path';
 import dotenv from 'dotenv';
-
+// import _ from 'lodash';
 
 dotenv.load();
 const app = new Koa();
@@ -20,7 +20,7 @@ app.use(koaLogger());
 const router = new Router();
 router
   .get('/', (ctx) => {
-    ctx.render('index.pug');
+    ctx.render('welcome/index.pug');
   });
 app.use(router.routes());
 
@@ -35,8 +35,8 @@ const pug = new Pug({
   // debug: true,
   // pretty: true,
   // compileDebug: true,
-  // locals: [],
-  // basedir: path.join(__dirname, 'views'),
+  locals: [],
+  basedir: path.join(__dirname, 'views'),
   // helperPath: [
   //   { _ },
   //   { urlFor: (...args) => router.url(...args) },
