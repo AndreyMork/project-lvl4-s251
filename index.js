@@ -13,8 +13,8 @@ export default () => {
   dotenv.load();
   const app = new Koa();
 
-  app.use(serve(path.join(__dirname, 'public')));
   app.use(koaLogger());
+  app.use(serve(path.join(__dirname, 'public')));
 
   const router = new Router();
   router
