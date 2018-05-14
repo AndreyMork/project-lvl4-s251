@@ -2,7 +2,7 @@ import request from 'supertest';
 import dotenv from 'dotenv';
 import app from '..';
 
-dotenv.load();
+// dotenv.load();
 describe('requests', () => {
   let server;
 
