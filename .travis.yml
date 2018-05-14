@@ -18,7 +18,6 @@ cache:
 
 jobs:
   include:
-    - stage: lint
+    - stage: tests
       script: make lint
-    - stage: test
       script: make test
