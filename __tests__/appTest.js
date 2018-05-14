@@ -1,5 +1,5 @@
 import request from 'supertest';
-import dotenv from 'dotenv';
+// import dotenv from 'dotenv';
 import app from '..';
 
 // dotenv.load();
