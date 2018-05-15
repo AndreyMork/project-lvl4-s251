@@ -19,11 +19,11 @@ export default () => {
   const router = new Router();
   router
     .get('/', (ctx) => {
-      ctx.render('welcome/index.pug');
+      ctx.render('welcome/index.pug', { pageTitle: 'Aethra Task Manager' });
     });
   app.use(router.routes());
 
-  const rollbar = new Rollbar(process.env.ROLLBAR);
+  const rollbar = new Rollbar(process.env.ROLLBAR_TOKEN);
   app.on('error', (err, ctx) => {
     rollbar.log(err, ctx.request);
   });
