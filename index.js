@@ -25,6 +25,7 @@ export default () => {
 
   const rollbar = new Rollbar(process.env.ROLLBAR_TOKEN);
   app.on('error', (err, ctx) => {
+    console.error(err);
     rollbar.log(err, ctx.request);
   });
 
