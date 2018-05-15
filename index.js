@@ -19,7 +19,7 @@ export default () => {
   const router = new Router();
   router
     .get('/', (ctx) => {
-      ctx.render('welcome/index.pug');
+      ctx.render('welcome/index.pug', { pageTitle: 'Aethra Task Manager' });
     });
   app.use(router.routes());
 
