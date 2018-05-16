@@ -12,15 +12,14 @@
     "dist"
   ],
   "scripts": {
-    "start": "",
+    "gulp": "gulp",
+    "start": "gulp server",
     "nodemon": "nodemon",
     "babel-node": "babel-node",
     "test": "jest --coverage",
-    "watch-test": "jest --watch --notify",
     "eslint": "eslint",
     "webpack": "webpack",
     "build": "npm run webpack -- -p --env production && babel src --out-dir dist --source-maps inline",
-    "prepublishOnly": "npm run build",
     "postinstall": "npm run build"
   },
   "repository": {
