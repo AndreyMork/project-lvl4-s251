@@ -1,5 +1,5 @@
 start:
-	DEBUG="task-manager:*" npm run nodemon -- --watch '.' --ext '.js' --exec npm run babel-node task-manager.js
+	DEBUG="task-manager:*" npm run nodemon -- --watch '.' --ext '.js' --exec npm run gulp -- server
 
 install:
 	npm install
@@ -15,7 +15,4 @@ lint:
 	npm run eslint .
 
 test:
-	npm run test
-
-watch-test:
-	npm run watch-test
+	npm test
