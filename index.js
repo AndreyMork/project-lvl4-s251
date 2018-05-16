@@ -6,11 +6,9 @@ import Pug from 'koa-pug';
 import Rollbar from 'rollbar';
 
 import path from 'path';
-import dotenv from 'dotenv';
 // import _ from 'lodash';
 
 export default () => {
-  dotenv.load();
   const app = new Koa();
 
   app.use(koaLogger());
