@@ -1,3 +1,4 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
-import '../public/style.css';
+import 'bootstrap/dist/js/bootstrap.min';
+
 import '../public/favicon.ico';
