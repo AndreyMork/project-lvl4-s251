@@ -1,5 +1,5 @@
 import path from 'path';
-// import webpack from 'webpack'
+import webpack from 'webpack';
 
 module.exports = {
   mode: process.env.NODE_ENV || 'development',
@@ -26,5 +26,12 @@ module.exports = {
       },
     ],
   },
-  plugins: [],
+  plugins: [
+    new webpack.ProvidePlugin({
+      $: 'jquery',
+      jQuery: 'jquery',
+      'window.jQuery': 'jquery',
+      Popper: ['popper.js', 'default'],
+    }),
+  ],
 };
