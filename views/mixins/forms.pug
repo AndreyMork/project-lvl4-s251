@@ -1,21 +1,20 @@
-- const getInputName = (f, property) => `form`
+//- - const getInputName = (f, property) => `${f.name}[${property}]`;
 
 mixin formFor(f, options = {})
-  //- - const url = _.get(options, 'url');
-  //- - const method = _.get(options, 'method', 'get').toLowerCase();
+  - const { url, method = 'get' } = options;
   //- - const isStandart = _.includes(['get', 'post'], method);
+
   //- form(action= url method= isStandart ? method : 'post')
-  //-   if !isStandart
-  //-     input(name='_method' type='hidden' placeholder= method)
-  //-   block
-  form(action='/post' method='POST')
+  form(action=url method=method.toLowerCase())
+    //- if !isStandart
+    //-   input(name='_method' type='hidden' placeholder= method)
     block
 
-mixin input(f, property, options = { as: 'text' })
-  //- - const placeholder = f.object[property] === undefined ? '' : f.object[property]
+mixin input(f, property, options = { type: 'text' })
+  //- - const value = f.object[property] === undefined ? '' : f.object[property]
   //- .form-group(class=(f.errors[property] && 'has-danger'))
   .form-group
-    input.form-control(name=property type=options['as'] placeholder=property)
+    input.form-control(name=property type=options.type placeholder=property)
   //-   label= property
   //-   input(name=getInputName(f, property) class='form-control' type=options['as'] placeholder=`${placeholder}`)
   //-   if f.errors[property]
