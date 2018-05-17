@@ -38,7 +38,7 @@ export default () => {
   app.use(router.allowedMethods());
   app.use(router.routes());
 
-  if (process.env.NODE_ENV !== 'production') {
+  if (process.env.NODE_ENV === 'production') {
     const rollbar = new Rollbar(process.env.ROLLBAR_TOKEN);
     app.on('error', (err, ctx) => {
       console.error(err);
