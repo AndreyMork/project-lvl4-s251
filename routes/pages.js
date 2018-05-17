@@ -1,10 +1,9 @@
 export default (router) => {
   router
-    .get('/about', (ctx) => {
-      ctx.render('about.pug', { pageTitle: 'About' });
+    .get('root', '/', (ctx) => {
+      ctx.render('welcome/index', { pageTitle: 'Aethra Task Manager' });
     })
-    .get('*', (ctx) => {
-      ctx.status = 404;
-      ctx.render('404.pug', { pageTitle: 'Not Found' });
+    .get('about', '/about', (ctx) => {
+      ctx.render('about.pug', { pageTitle: 'About' });
     });
 };
