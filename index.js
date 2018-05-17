@@ -1,7 +1,6 @@
 import 'babel-polyfill';
 
 import path from 'path';
-// import _ from 'lodash';
 
 import Koa from 'koa';
 import koaLogger from 'koa-logger';
@@ -51,11 +50,9 @@ export default () => {
     basedir: path.join(__dirname, 'views'),
     debug: process.env.NODE_ENV === 'development',
     noCache: process.env.NODE_ENV === 'development',
-    // locals: [],
-    // helperPath: [
-    //   { _ },
-    //   { urlFor: (...args) => router.url(...args) },
-    // ],
+    helperPath: [
+      { urlFor: (...args) => router.url(...args) },
+    ],
   });
   pug.use(app);
 

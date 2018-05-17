@@ -1,6 +1,6 @@
 export default (router) => {
   router
-    .get('/sessions/new', (ctx) => {
+    .get('newSession', '/sessions/new', (ctx) => {
       // ctx.render('sessions/new', { pageTitle: 'Sign In' });
       ctx.redirect('/');
     });

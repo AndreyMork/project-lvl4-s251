@@ -23,7 +23,7 @@ export default (router) => {
     //     ctx.render('users/new', { f: buildFormObj(user, e) });
     //   }
     // })
-    .post('/post', (ctx) => {
+    .post('users', '/users', (ctx) => {
       const form = ctx.request.body;
       console.log(form);
       ctx.redirect('/users/new');
