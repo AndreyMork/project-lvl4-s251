@@ -1,3 +1,6 @@
+include /mixins/forms.pug
+
+
 doctype html
 html(lang='en')
   head
@@ -12,5 +15,12 @@ html(lang='en')
         ul.navbar-nav.mr-auto
           li.nav-item
             a.nav-link(href='/about') About
+        ul.navbar-nav
+          //- isSigned()
+          //- else
+          li.nav-item
+            a.nav-link(href='/newSession') Sign In
+          li.nav-item
+            a.nav-link(href='/newUser') Sign Up
     main.container
       block content
