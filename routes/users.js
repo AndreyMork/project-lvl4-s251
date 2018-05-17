@@ -26,6 +26,6 @@ export default (router) => {
     .post('/post', (ctx) => {
       const form = ctx.request.body;
       console.log(form);
-      ctx.redirect('/newUser');
+      ctx.redirect('/users/new');
     });
 };
