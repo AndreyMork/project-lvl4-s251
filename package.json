@@ -5,12 +5,6 @@
   "engines": {
     "node": "10.x.x"
   },
-  "bin": {
-    "task-manager": "dist/bin/task-manager.js"
-  },
-  "files": [
-    "dist"
-  ],
   "scripts": {
     "gulp": "gulp",
     "start": "gulp server",
@@ -19,7 +13,7 @@
     "test": "jest --coverage",
     "eslint": "eslint",
     "webpack": "webpack",
-    "build": "npm run webpack -- -p --env production && babel src --out-dir dist --source-maps inline",
+    "build": "npm run webpack -- -p --env production",
     "postinstall": "npm run build"
   },
   "repository": {
