@@ -44,6 +44,8 @@
     "precss": "^3.1.2",
     "rollbar": "^2.4.0",
     "style-loader": "^0.21.0",
+    "uuid-js": "^0.7.5",
+    "validate.js": "^0.12.0",
     "webpack": "^4.8.3"
   },
   "devDependencies": {

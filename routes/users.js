@@ -1,5 +1,7 @@
 // import buildFormObj from '../lib/formObjectBuilder';
-// import { User } from '../models';
+import container from '../container';
+
+const { User, validate } = container;
 
 export default (router) => {
   router
@@ -24,8 +26,19 @@ export default (router) => {
     //   }
     // })
     .post('users', '/users', (ctx) => {
-      const form = ctx.request.body;
-      console.log(form);
-      ctx.redirect('/users/new');
+      const {
+        email,
+        password,
+        firstName,
+        lastName,
+      } = ctx.request.body;
+
+      const user = new User(email, password, firstName, lastName);
+      const errors = validate(user);
+      if (errors) {
+        ctx.redirect(ctx.router.url('newUser'));
+      } else {
+        ctx.redirect(ctx.router.url('root'));
+      }
     });
 };

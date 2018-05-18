@@ -5,12 +5,14 @@ import container from './container';
 
 gulp.task('console', () => {
   const replServer = repl.start({
-    prompt: 'Application console > ',
+    prompt: '> ',
   });
 
   Object.keys(container).forEach((key) => {
     replServer.context[key] = container[key];
   });
+
+  return Promise.resolve();
 });
 
 gulp.task('server', () => {
