@@ -40,6 +40,7 @@
     "koa-router": "^7.4.0",
     "koa-static": "^4.0.3",
     "koa-webpack": "^3.0.2",
+    "pg": "^7.4.3",
     "popper.js": "^1.14.3",
     "precss": "^3.1.2",
     "rollbar": "^2.4.0",
@@ -61,7 +62,7 @@
     "eslint-plugin-import": "^2.12.0",
     "eslint-plugin-jest": "*",
     "jest": "*",
-    "jest-cli": "*",
+    "jest-cli": "^22.4.4",
     "nodemon": "*",
     "supertest": "*",
     "webpack-cli": "*"
