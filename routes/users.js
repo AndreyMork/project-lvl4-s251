@@ -10,9 +10,11 @@ export default (router) => {
     //   ctx.render('users', { users });
     // })
     .get('newUser', '/users/new', (ctx) => {
+      ctx.flash.set('test message');
+
       // const user = User.build();
       // ctx.render('users/new', { f: buildFormObj(user) });
-      ctx.render('users/new', { pageTitel: 'Sign Up' });
+      ctx.render('users/new', { pageTitel: 'Sign Up', flash: ctx.session.flash });
     })
     // .post('users', '/users', async (ctx) => {
     //   const form = ctx.request.body.form;
