@@ -1,18 +1,21 @@
 // import buildFormObj from '../lib/formObjectBuilder';
 import container from '../container';
 
-const { User, validate } = container;
+const { User, validate, db } = container;
 
 export default (router) => {
   router
-    // .get('users', '/users', async (ctx) => {
-    //   const users = await User.findAll();
-    //   ctx.render('users', { users });
-    // })
+    .get('users', '/users', async (ctx) => {
+      // const users = await User.findAll();
+      const users = await db.getUsers();
+
+
+      ctx.render('users', { users, pageTitle: 'Users' });
+    })
     .get('newUser', '/users/new', (ctx) => {
       // const user = User.build();
       // ctx.render('users/new', { f: buildFormObj(user) });
-      ctx.render('users/new', { pageTitel: 'Sign Up' });
+      ctx.render('users/new', { pageTitle: 'Sign Up' });
     })
     // .post('users', '/users', async (ctx) => {
     //   const form = ctx.request.body.form;
@@ -36,9 +39,11 @@ export default (router) => {
       const user = new User(email, password, firstName, lastName);
       const errors = validate(user);
       if (errors) {
+        console.error(errors);
         ctx.redirect(ctx.router.url('newUser'));
       } else {
-        ctx.redirect(ctx.router.url('root'));
+        db.insertUser(user);
+        ctx.redirect(ctx.router.url('users'));
       }
     });
 };
