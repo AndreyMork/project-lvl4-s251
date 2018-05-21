@@ -11,8 +11,6 @@ gulp.task('console', () => {
   Object.keys(container).forEach((key) => {
     replServer.context[key] = container[key];
   });
-
-  return Promise.resolve();
 });
 
 gulp.task('server', () => {
