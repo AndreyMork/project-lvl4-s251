@@ -1,5 +1,5 @@
 // import buildFormObj from '../lib/formObjectBuilder';
-import { buildFlashMsg } from '../lib';
+import lib from '../lib';
 import User from '../entities/User';
 import container from '../container';
 
@@ -32,11 +32,11 @@ export default (router) => {
       const user = new User(email, password, firstName, lastName);
       const errors = validate(user);
       if (errors) {
-        ctx.flash.set(buildFlashMsg(Object.values(errors)[0], 'danger'));
+        ctx.flash.set(lib.buildFlashMsg(Object.values(errors)[0], 'danger'));
         ctx.redirect(ctx.router.url('newUser'));
       } else {
         await db.insertUser(user);
-        ctx.flash.set(buildFlashMsg('User has been created', 'success'));
+        ctx.flash.set(lib.buildFlashMsg('User has been created', 'success'));
         ctx.redirect(ctx.router.url('root'));
       }
     });
