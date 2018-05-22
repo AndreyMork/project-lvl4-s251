@@ -1,6 +1,11 @@
 extends /layouts/application.pug
 
 block content
-  .text-center
-    h1 Sign In
-    p.lead Nothing here.
+  form.form(action=urlFor('session') method='post')
+    .form-label-group
+      input.form-control(name='email' type='text' placeholder='Email address' id='inputEmail' required autofocus)     
+      label(for='inputEmail') Email address
+    .form-label-group
+      input.form-control(name='password' type='password' placeholder='Password' id='inputPassword' required)
+      label(for='inputPassword') Password 
+    button.btn.btn-outline-success.btn-success.btn-lg.btn-block(type='submit') Sign in
