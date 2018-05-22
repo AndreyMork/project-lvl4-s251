@@ -16,8 +16,6 @@ const insertUser = async (user) => {
   } catch (err) {
     console.error(err.stack);
   }
-
-  client.end();
 };
 
 const getUsers = async () => {
@@ -25,7 +23,7 @@ const getUsers = async () => {
     text: 'SELECT email, first_name, last_name, id FROM users',
   };
   const res = await client.query(query);
-  client.end();
+
   return res.rows;
 };
 
