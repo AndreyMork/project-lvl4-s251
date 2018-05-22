@@ -1,5 +1,5 @@
 include /mixins/forms.pug
-
+include /mixins/flash.pug
 
 doctype html
 html(lang='en')
@@ -23,4 +23,5 @@ html(lang='en')
           li.nav-item
             a.nav-link(href=urlFor('newUser')) Sign Up
     main.container
+      +flashMessage()
       block content

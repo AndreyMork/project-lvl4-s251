@@ -12,7 +12,7 @@ export default (router) => {
     .get('newUser', '/users/new', (ctx) => {
       // const user = User.build();
       // ctx.render('users/new', { f: buildFormObj(user) });
-      ctx.render('users/new', { pageTitel: 'Sign Up' });
+      ctx.render('users/new', { pageTitle: 'Sign Up' });
     })
     // .post('users', '/users', async (ctx) => {
     //   const form = ctx.request.body.form;
