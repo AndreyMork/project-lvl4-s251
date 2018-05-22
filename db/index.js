@@ -1,8 +1,8 @@
-import { Pool } from 'pg';
+import { Client } from 'pg';
 
 
-// const pool = new Pool();
-const pool = new Pool({ connectionString: process.env.DATABASE_URL, ssl: true });
+// const client = new Pool();
+const client = new Client({ connectionString: process.env.DATABASE_URL, ssl: true });
 
 const insertUser = async (user) => {
   const query = {
@@ -11,7 +11,7 @@ const insertUser = async (user) => {
   };
 
   try {
-    await pool.query(query);
+    await client.query(query);
   } catch (err) {
     console.error(err.stack);
   }
@@ -21,7 +21,7 @@ const getUsers = async () => {
   const query = {
     text: 'SELECT email, first_name, last_name, id FROM users',
   };
-  const res = await pool.query(query);
+  const res = await client.query(query);
   return res.rows;
 };
 
