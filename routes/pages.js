@@ -1,9 +1,11 @@
 export default (router) => {
   router
     .get('root', '/', (ctx) => {
-      ctx.render('pages/root', { pageTitle: 'Aethra Task Manager' });
+      ctx.state.pageTitle = 'Aethra Task Manager';
+      ctx.render('pages/root');
     })
     .get('about', '/about', (ctx) => {
-      ctx.render('pages/about', { pageTitle: 'About' });
+      ctx.state.pageTitle = 'About';
+      ctx.render('pages/about');
     });
 };

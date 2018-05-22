@@ -1,7 +1,9 @@
 // import buildFormObj from '../lib/formObjectBuilder';
+import { buildFlashMsg } from '../lib';
+import User from '../entities/User';
 import container from '../container';
 
-const { User, validate, db } = container;
+const { db, validate } = container;
 
 export default (router) => {
   router
@@ -9,26 +11,17 @@ export default (router) => {
       // const users = await User.findAll();
       const users = await db.getUsers();
 
+      ctx.state.users = users;
+      ctx.state.pageTitle = 'Users';
 
-      ctx.render('users', { users, pageTitle: 'Users' });
+      ctx.render('users');
     })
     .get('newUser', '/users/new', (ctx) => {
       // const user = User.build();
-      // ctx.render('users/new', { f: buildFormObj(user) });
-      ctx.render('users/new', { pageTitle: 'Sign Up' });
+      ctx.state.pageTitle = 'Sign Up';
+      ctx.render('users/new');
     })
-    // .post('users', '/users', async (ctx) => {
-    //   const form = ctx.request.body.form;
-    //   const user = User.build(form);
-    //   try {
-    //     await user.save();
-    //     ctx.flash.set('User has been created');
-    //     ctx.redirect(router.url('root'));
-    //   } catch (e) {
-    //     ctx.render('users/new', { f: buildFormObj(user, e) });
-    //   }
-    // })
-    .post('users', '/users', (ctx) => {
+    .post('users', '/users', async (ctx) => {
       const {
         email,
         password,
@@ -39,11 +32,12 @@ export default (router) => {
       const user = new User(email, password, firstName, lastName);
       const errors = validate(user);
       if (errors) {
-        console.error(errors);
+        ctx.flash.set(buildFlashMsg(Object.values(errors)[0], 'danger'));
         ctx.redirect(ctx.router.url('newUser'));
       } else {
-        db.insertUser(user);
-        ctx.redirect(ctx.router.url('users'));
+        await db.insertUser(user);
+        ctx.flash.set(buildFlashMsg('User has been created', 'success'));
+        ctx.redirect(ctx.router.url('root'));
       }
     });
 };
