@@ -1,8 +1,8 @@
 import { Pool } from 'pg';
 
 
-const pool = process.env.NODE_ENV === 'development' ?
-  new Pool() : new Pool({ connectionString: process.env.DATABASE_URL, ssl: true });
+// const pool = new Pool();
+const pool = new Pool({ connectionString: process.env.DATABASE_URL, ssl: true });
 
 const insertUser = async (user) => {
   const query = {
