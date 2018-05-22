@@ -6,6 +6,8 @@ import Koa from 'koa';
 import koaLogger from 'koa-logger';
 import bodyParser from 'koa-bodyparser';
 import serve from 'koa-static';
+import session from 'koa-session';
+import flash from 'koa-flash-simple';
 import Router from 'koa-router';
 import Pug from 'koa-pug';
 // import koaWebpack from 'koa-webpack';
@@ -19,9 +21,17 @@ import container from './container';
 export default () => {
   const app = new Koa();
 
-  // app.keys = ['some secret hurr'];
-  // app.use(session(app));
-  // app.use(flash());
+  app.keys = ['some secret hurr  123456'];
+  app.use(session(app));
+  app.use(flash());
+
+  app.use(async (ctx, next) => {
+    ctx.state = {
+      flash: ctx.flash,
+    };
+
+    await next();
+  });
 
   app.use(bodyParser());
   // method override
@@ -51,7 +61,9 @@ export default () => {
     debug: process.env.NODE_ENV === 'development',
     noCache: process.env.NODE_ENV === 'development',
     helperPath: [
-      { urlFor: (...args) => router.url(...args) },
+      {
+        urlFor: (...args) => router.url(...args),
+      },
     ],
   });
   pug.use(app);
