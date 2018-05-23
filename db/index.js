@@ -7,6 +7,18 @@ dotenv.load();
 const client = new Client({ connectionString: process.env.DATABASE_URL, ssl: true });
 client.connect();
 
+const findUser = async (email) => {
+  const query = {
+    text: 'SELECT * FROM users WHERE email=$1',
+    values: [email],
+  };
+
+  const res = await client.query(query);
+  // console.log(res);
+
+  return res.rows[0];
+};
+
 const isEmailInTable = async (email) => {
   const query = {
     text: 'SELECT 1 FROM users WHERE email=$1',
@@ -45,4 +57,9 @@ const getUsers = async () => {
   return res.rows;
 };
 
-export default { isEmailInTable, insertUser, getUsers };
+export default {
+  findUser,
+  isEmailInTable,
+  insertUser,
+  getUsers,
+};

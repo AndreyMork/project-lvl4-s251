@@ -5,7 +5,7 @@ doctype html
 html(lang='en')
   head
     title= pageTitle
-    script(src='/assets/main.js')
+    script(src='/assets/main.js') 
   body
     nav.navbar.navbar-expand-md.navbar-dark.sticky-top(style='background-color: #9d76ba')
       a.navbar-brand(href=urlFor('root')) Task Manager
@@ -18,12 +18,14 @@ html(lang='en')
           li.nav-item
             a.nav-link(href=urlFor('about')) About
         ul.navbar-nav
-          //- isSigned()
-          //- else
-          li.nav-item
-            a.nav-link(href=urlFor('newSession')) Sign In
-          li.nav-item
-            a.nav-link(href=urlFor('newUser')) Sign Up
+          if isSignedIn()
+            li.nav-item
+              a.nav-link(href=urlFor('session') data-method='delete' rel='nofollow') Sign Out
+          else
+            li.nav-item
+              a.nav-link(href=urlFor('newSession')) Sign In
+            li.nav-item
+              a.nav-link(href=urlFor('newUser')) Sign Up
     main.container
       +flashMessage()
       block content
