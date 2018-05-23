@@ -40,6 +40,7 @@ export default (router) => {
       } else {
         await db.insertUser(user);
         ctx.flash.set(lib.buildFlashMsg('User has been created', 'success'));
+        ctx.session.userId = user.id;
         ctx.redirect(ctx.router.url('root'));
       }
     });

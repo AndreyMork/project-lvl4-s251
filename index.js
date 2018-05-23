@@ -8,6 +8,7 @@ import bodyParser from 'koa-bodyparser';
 import serve from 'koa-static';
 import session from 'koa-session';
 import flash from 'koa-flash-simple';
+import methodOverride from 'koa-methodoverride';
 import Router from 'koa-router';
 import Pug from 'koa-pug';
 // import koaWebpack from 'koa-webpack';
@@ -21,6 +22,7 @@ import container from './container';
 export default () => {
   const app = new Koa();
 
+
   app.keys = ['some secret hurr  123456'];
   app.use(session(app));
   app.use(flash());
@@ -28,13 +30,22 @@ export default () => {
   app.use(async (ctx, next) => {
     ctx.state = {
       flash: ctx.flash,
+      isSignedIn: () => ctx.session.userId !== undefined,
     };
 
     await next();
   });
 
   app.use(bodyParser());
-  // method override
+  app.use(methodOverride((req) => {
+    // return req?.body?._method;
+    console.log(req.body);
+    if (req.body && typeof req.body === 'object' && '_method' in req.body) {
+      return req.body._method; // eslint-disable-line
+    }
+
+    return null;
+  }));
   app.use(koaLogger());
   app.use(serve(path.join(__dirname, 'public')));
 
