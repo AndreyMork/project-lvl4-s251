@@ -17,7 +17,7 @@ export default class {
 
   constructor(email, password, firstName, lastName) {
     this.id = uuid.create().toString();
-    this.email = email;
+    this.email = email.toLowerCase();
     // this.password = encrypt(passwor);
     this.password = password;
     this.firstName = firstName;
