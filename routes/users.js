@@ -34,6 +34,9 @@ export default (router) => {
       if (errors) {
         ctx.flash.set(lib.buildFlashMsg(Object.values(errors)[0], 'danger'));
         ctx.redirect(ctx.router.url('newUser'));
+      } else if (await db.isEmailInTable(email)) {
+        ctx.flash.set(lib.buildFlashMsg('This email is already in use', 'danger'));
+        ctx.redirect(ctx.router.url('newUser'));
       } else {
         await db.insertUser(user);
         ctx.flash.set(lib.buildFlashMsg('User has been created', 'success'));
