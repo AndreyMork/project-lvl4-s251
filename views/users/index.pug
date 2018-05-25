@@ -6,8 +6,7 @@ block content
     thead
       tr
         th(scope='col') #
-        th(scope='col') First name
-        th(scope='col') Last name
+        th(scope='col') Full name
         th(scope='col') Email
     tbody
       - let counter = 0
@@ -15,6 +14,5 @@ block content
         - counter += 1
         tr
           th(scope='row')= counter
-          td= user.first_name || `${user.id.slice(0, 8)}...`
-          td= user.last_name
+          td= user.fullName
           td= user.email

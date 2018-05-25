@@ -1,7 +1,6 @@
-import container from '../container';
+import models from '../models';
 
-const { db } = container;
-
+const { User } = models;
 export default (router) => {
   router
     .get('newSession', '/sessions/new', (ctx) => {
@@ -10,7 +9,11 @@ export default (router) => {
     })
     .post('session', '/session', async (ctx) => {
       const { email, password } = ctx.request.body;
-      const user = await db.findUser(email.toLowerCase());
+      const user = await User.findOne({
+        where: {
+          email,
+        },
+      });
 
       if (user && user.password === password) {
         ctx.session.userId = user.id;
