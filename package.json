@@ -44,6 +44,7 @@
     "koa-session": "^5.8.1",
     "koa-static": "^4.0.3",
     "koa-webpack": "^3.0.2",
+    "lodash": "^4.17.10",
     "pg": "^7.4.3",
     "popper.js": "^1.14.3",
     "precss": "^3.1.2",

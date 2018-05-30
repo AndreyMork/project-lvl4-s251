@@ -1,6 +1,7 @@
 import 'babel-polyfill';
 
 import path from 'path';
+import _ from 'lodash';
 
 import Koa from 'koa';
 import koaLogger from 'koa-logger';
@@ -21,7 +22,6 @@ import container from './container';
 
 export default () => {
   const app = new Koa();
-
 
   app.keys = ['some secret hurr  123456'];
   app.use(session(app));
@@ -72,6 +72,7 @@ export default () => {
     noCache: process.env.NODE_ENV === 'development',
     helperPath: [
       {
+        _,
         urlFor: (...args) => router.url(...args),
       },
     ],

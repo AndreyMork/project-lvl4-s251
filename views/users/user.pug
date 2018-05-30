@@ -1,0 +1,25 @@
+extends /layouts/application.pug
+
+block content
+  .card.bg-light.shadow-sm.d-flex.mt-3
+    .card-header
+      h1= user.fullName
+    .card-body
+      table.table.table-borderless.table-sm
+        tbody
+          tr
+            th(scope='row' style='width: 10%') Email:
+            td= user.email
+          tr
+            th(scope='row') First Name:
+            td= user.firstName
+          tr
+            th(scope='row') Last Name:
+            td= user.lastName
+          tr
+            th(scope='row') Id:
+            td= user.id
+      if (isLoggedUser)
+        a.btn.btn-info.btn-lg.m-2(href=urlFor('userSettings')) Edit
+        a.btn.btn-info.btn-lg.m-2(href=urlFor('userSettings')) Change password   
+        a.btn.btn-outline-danger.btn-lg.m-2(href=urlFor('userDelete', user.id) data-method='delete' rel='nofollow') Delete Account
