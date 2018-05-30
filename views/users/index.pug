@@ -14,5 +14,6 @@ block content
         - counter += 1
         tr
           th(scope='row')= counter
-          td= user.fullName
+          td
+            a(href=urlFor('user', user.id))= user.fullName
           td= user.email
