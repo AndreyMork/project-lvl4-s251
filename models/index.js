@@ -5,6 +5,6 @@ dotenv.load();
 
 const sequelize = new Sequelize(process.env.DATABASE_URL);
 const User = sequelize.import('./User.js');
-sequelize.sync();
+sequelize.sync({ force: true });
 
 export default { User };
