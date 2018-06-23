@@ -1,24 +1,19 @@
 addons:
   code_climate:
     repo_token:
-      secure: L62FRNB/JRktvbEVcLEurMhAmoevXRLKBZZr8O2FsRzItXMfWmn6Ei7OK+D6an/KmJLKuOsqhMP5kCSUTZtwUvY4fHSRH03CVy2BGIJhNWpM+tRgIBL/JwTSudE5zlKke8BqIe0Q2ESarAC77AkClEm/silQR2XaTSBdxF5QV4l+UNqos6pG/R6DuTLLyXXTAts4Ufo/sh6dQlahv27lyEs8YfB/gVTN1MpFNDKwlq0mzohOi0OuJdd71lNgF0qtR86uaUWb+7CB1ZA2/BWBuu3AYXgqTElemnDfY3UYqfOg+rPGLnF+6Ar3rd3AP+NJXz4n7GDoHps8EUs0E7YeBmzGiEmkVLMJPgJ3ifI1W8Yuk9O7aSIswbNX59VI1KLvdMz0KRjjjYdml3bWO0sKyqBZadeJX9B8t6PnYe+CZIEYMFGyjvwftPu8SayLmvtYpPPzfrRaxwM+kO1XbJU2FKyrCeMsHrH8/zLByssShVfQU6IMhw1e9ruDCXLDwlbnAyyiesa+YfssZLNgmS0SO2iJwrMAycVezbD5iGy/DRfOSTzqCwujx1wVv//bEKAhOVdpxr8qZNYP2IXHbNneMtBSz1ExiU2AIeiovIenYa3LmQY9JMYBlkxMR2Xo421UQFXAoM9Qe84HqLay+CKjIpAJMJfHrhJ8FGgLDpFzask=
-
+      secure: ronHNxm5mmNkASIMEBiIh9/QGZfilthqLYpNol01FppzI0MjOmYSN+DzZ1KI9TyDEB5QbQAuknRlI6SBjJYLcuUoSwmjOszB1a4VT5lPv9v+jm3G/9xXj2VnL8shmgTuKSOFOjjBr54jHUqdTMhfz8N925ZNpaldapY/WdRSzhcyylR/yJgP8NsivfQ/M3/A2L8kCqE7Of+0DGunQ7cuVZyCb7QKE9bkX6kb0Bd/nHWriBgdIjZsuakDbEzV68D4zR7fh4FgB5Gn2pBp1CRt10fDsfBhPGelnLrYu8N7sg8QtAk85QCj+/ACIojeGfQA/urT1vGyhCAUmVqhS6N0HzwNld9b+Lwd3iBY0E0plBCM9jouKI3o6fZWz4aWJzVMlyDM/Sh8jgnn7QvXuO/0b9Y71w7WxEanNsvLruI7OM76ZwAeDq+70gAPY6QdHVDwREQvPxtnShxkfLr5wQlukNW+3LJ1e7QS/xF7i6EZafhYgCSx9t4Z3BJ7CINZaZWGJKFeyPa5nwRmIDkwT4f4K5p0cRpEMBYzF1rd9XLPCFt+sK6WcpOLfTCFP7QkooEMQDTZhWX3SlUbWyxbjZEBRWlWrT+HNFt6fkxiw7TjUZ3S4MHpti/s26LbyZuW/iuoYcVbZ39n26D6z3xC4qFQb7sQfVmlaT6rTaXrxLQ3rX8=
 language: node_js
 node_js:
-  - node
+- node
 before_script:
-  - psql -c 'create database travis_ci_test;' -U postgres
-  - npm install codeclimate-test-reporter -g
-
+- psql -c 'create database travis_ci_test;' -U postgres
+- npm install codeclimate-test-reporter -g
 after_script:
-  - codeclimate-test-reporter <./coverage/lcov.info
-
+- codeclimate-test-reporter <./coverage/lcov.info
 cache:
   directories:
-    - "node_modules"
-
+  - node_modules
 jobs:
   include:
-    - stage: tests
-      script: make lint
-      script: make test
+  - stage: tests
+    script: make test
