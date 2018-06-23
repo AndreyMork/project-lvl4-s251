@@ -31,10 +31,11 @@ describe('requests', () => {
   });
 
   it('routes', async () => {
-    await Promise.all(Object.values(routes).map(route =>
+    await Promise.all(Object.values(routes).map(route => (
       request.agent(server)
         .get(route.url)
-        .expect(route.status)));
+        .expect(route.status)
+    )));
   });
 
   afterEach((done) => {

@@ -36,8 +36,8 @@ export default (sequelize, DataTypes) => {
   }, {
     getterMethods: {
       fullName() {
-        return (this.firstName || this.lastName) ?
-          `${this.firstName} ${this.lastName}` : this.uuid;
+        return (this.firstName || this.lastName)
+          ? `${this.firstName} ${this.lastName}` : this.uuid;
       },
       // associate(models) {
       //   // associations can be defined here
