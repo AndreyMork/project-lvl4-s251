@@ -36,7 +36,7 @@ export default (router) => {
         ctx.render('users/new');
       }
     })
-    .get('userSettings', '/users/my', async (ctx) => {
+    .get('userPage', '/users/my', async (ctx) => {
       const id = ctx.session.userId;
       const user = await User.findOne({ where: id });
 
@@ -45,6 +45,34 @@ export default (router) => {
       ctx.state.pageTitle = user.fullName;
 
       ctx.render('users/user');
+    })
+    .get('userSettings', '/users/settings', async (ctx) => {
+      const id = ctx.session.userId;
+      const user = await User.findOne({ where: id });
+
+      ctx.state.user = user;
+      ctx.state.isLoggedUser = true;
+      ctx.state.pageTitle = user.fullName;
+
+      ctx.render('users/settings');
+    })
+    .put('userSettings', '/users/settings', async (ctx) => {
+      const id = ctx.session.userId;
+      const user = await User.findOne({ where: id });
+
+      const { email, firstName, lastName } = ctx.request.body;
+
+      try {
+        await user.update({ email, firstName, lastName });
+        ctx.flash.set({ text: 'your data changed', type: 'success' });
+
+        ctx.state.pageTitle = user.fullName;
+        ctx.redirect(router.url('userPage'));
+      } catch (error) {
+        ctx.flash.set({ text: 'there was errors', type: 'danger' });
+        ctx.state.pageTitle = user.fullName;
+        ctx.redirect(router.url('userSettings'));
+      }
     })
     .get('user', '/users/:id', async (ctx) => {
       const id = Number(ctx.params.id);
