@@ -5,7 +5,7 @@ import container from './container';
 
 gulp.task('console', () => {
   const replServer = repl.start({
-    prompt: 'Application console > ',
+    prompt: '> ',
   });
 
   Object.keys(container).forEach((key) => {

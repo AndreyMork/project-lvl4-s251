@@ -1,6 +1,12 @@
 start:
 	DEBUG="task-manager:*" npm run nodemon -- --watch '.' --ext '.js' --exec npm run gulp -- server
 
+new-table:
+	psql -d task_manager < sql/createtable.sql
+
+gulp-console:
+	npm run gulp console
+
 install:
 	npm install
 
