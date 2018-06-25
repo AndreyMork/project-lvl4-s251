@@ -25,6 +25,7 @@
   "dependencies": {
     "autoprefixer": "^8.6.3",
     "babel-polyfill": "*",
+    "babel-register": "^6.26.0",
     "bootstrap": "^4.1.1",
     "css-loader": "^0.28.11",
     "debug": "^3.1.0",
