@@ -8,10 +8,3 @@
 ***
 ## Description
 > [Hexlet project](https://ru.hexlet.io/projects)
-
-***
-## Installation
-
-## Usage
-
-## Example
