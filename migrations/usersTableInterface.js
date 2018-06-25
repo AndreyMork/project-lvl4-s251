@@ -18,6 +18,9 @@ export default {
     lastName: {
       type: Sequelize.STRING,
     },
+    uuid: {
+      type: Sequelize.UUID,
+    },
     createdAt: {
       allowNull: false,
       type: Sequelize.DATE,
