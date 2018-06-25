@@ -1,5 +1,7 @@
 import { buildFormObj, buildFlashMsg } from '../lib';
 import models from '../models';
+import encrypt from '../lib/encrypt';
+
 
 const { User } = models;
 
@@ -72,6 +74,40 @@ export default (router) => {
         ctx.flash.set({ text: 'there was errors', type: 'danger' });
         ctx.state.pageTitle = user.fullName;
         ctx.redirect(router.url('userSettings'));
+      }
+    })
+    .get('changePassword', '/users/newPassword', async (ctx) => {
+      const id = ctx.session.userId;
+      const user = await User.findOne({ where: id });
+
+      ctx.state.user = user;
+      ctx.state.isLoggedUser = true;
+      ctx.state.pageTitle = user.fullName;
+
+      ctx.render('users/newPassword');
+    })
+    .put('changePassword', '/users/newPassword', async (ctx) => {
+      const id = ctx.session.userId;
+      const user = await User.findOne({ where: id });
+
+      const { oldPassword, newPassword } = ctx.request.body;
+
+      if (user.passwordDigest !== encrypt(oldPassword)) {
+        ctx.flash.set({ text: 'password is wrong', type: 'danger' });
+        ctx.redirect(router.url('changePassword'));
+      }
+
+      try {
+        await user.update({ password: newPassword });
+
+        ctx.flash.set({ text: 'password changed', type: 'success' });
+
+        ctx.state.pageTitle = user.fullName;
+        ctx.redirect(router.url('userPage'));
+      } catch (error) {
+        ctx.flash.set({ text: 'there was errors', type: 'danger' });
+        ctx.state.pageTitle = user.fullName;
+        ctx.redirect(router.url('changePassword'));
       }
     })
     .get('user', '/users/:id', async (ctx) => {
