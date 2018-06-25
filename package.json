@@ -54,9 +54,7 @@
     "style-loader": "^0.21.0",
     "uuid-js": "^0.7.5",
     "validate.js": "^0.12.0",
-    "webpack": "^4.12.0"
-  },
-  "devDependencies": {
+    "webpack": "^4.12.0",
     "babel-cli": "*",
     "babel-core": "*",
     "babel-eslint": "^8.2.4",
@@ -64,13 +62,15 @@
     "babel-loader": "*",
     "babel-preset-env": "^1.7.0",
     "babel-preset-stage-0": "*",
+    "nodemon": "^1.17.5"
+  },
+  "devDependencies": {
     "eslint": "^5.0.0",
     "eslint-config-airbnb-base": "^13.0.0",
     "eslint-plugin-import": "^2.12.0",
     "eslint-plugin-jest": "^21.17.0",
     "jest": "^23.1.0",
     "jest-cli": "^23.1.0",
-    "nodemon": "^1.17.5",
     "supertest": "*",
     "webpack-cli": "^3.0.8"
   },
