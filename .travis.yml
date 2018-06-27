@@ -15,5 +15,7 @@ cache:
   - node_modules
 jobs:
   include:
+  - stage: lint
+    script: make lint
   - stage: tests
     script: make test
