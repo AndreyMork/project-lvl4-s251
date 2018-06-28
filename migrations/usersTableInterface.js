@@ -8,6 +8,7 @@ export default {
     },
     email: {
       type: Sequelize.STRING,
+      unique: true,
     },
     passwordDigest: {
       type: Sequelize.STRING,
