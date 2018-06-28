@@ -53,8 +53,8 @@ export default (router) => {
       const user = await User.findOne({ where: id });
 
       ctx.state.user = user;
-      ctx.state.isLoggedUser = true;
       ctx.state.pageTitle = user.fullName;
+      ctx.state.formObj = buildFormObj(user);
 
       ctx.render('users/settings');
     })
@@ -62,7 +62,8 @@ export default (router) => {
       const id = ctx.session.userId;
       const user = await User.findOne({ where: id });
 
-      const { email, firstName, lastName } = ctx.request.body;
+      const { form } = ctx.request.body;
+      const { email, firstName, lastName } = form;
 
       try {
         await user.update({ email, firstName, lastName });
@@ -81,7 +82,7 @@ export default (router) => {
       const user = await User.findOne({ where: id });
 
       ctx.state.user = user;
-      ctx.state.isLoggedUser = true;
+      ctx.state.formObj = buildFormObj(user);
       ctx.state.pageTitle = user.fullName;
 
       ctx.render('users/newPassword');
@@ -90,25 +91,51 @@ export default (router) => {
       const id = ctx.session.userId;
       const user = await User.findOne({ where: id });
 
-      const { oldPassword, newPassword } = ctx.request.body;
+      const { form } = ctx.request.body;
+      const { password, newPassword, repeatedNewPassword } = form;
 
-      if (user.passwordDigest !== encrypt(oldPassword)) {
+      if (user.passwordDigest !== encrypt(password)) {
         ctx.flash.set({ text: 'password is wrong', type: 'danger' });
         ctx.redirect(router.url('changePassword'));
+      } else if (newPassword !== repeatedNewPassword) {
+        ctx.flash.set({ text: 'Repeated password !== new password', type: 'danger' });
+        ctx.redirect(router.url('changePassword'));
+      } else {
+        try {
+          await user.update({ password: newPassword });
+
+          ctx.flash.set({ text: 'password changed', type: 'success' });
+
+          ctx.state.pageTitle = user.fullName;
+          ctx.redirect(router.url('userPage'));
+        } catch (error) {
+          ctx.flash.set({ text: 'there was errors', type: 'danger' });
+          ctx.redirect(router.url('changePassword'));
+        }
       }
+    })
+    .get('userDelete', '/users/userDelete', async (ctx) => {
+      const id = ctx.session.userId;
+      const user = await User.findOne({ where: id });
+
+      ctx.state.user = user;
+      ctx.state.pageTitle = user.fullName;
+
+      ctx.render('users/delete');
+    })
+    .delete('userDelete', '/users/userDelete', async (ctx) => {
+      const id = ctx.session.userId;
+      const user = await User.findOne({ where: id });
 
       try {
-        await user.update({ password: newPassword });
-
-        ctx.flash.set({ text: 'password changed', type: 'success' });
-
-        ctx.state.pageTitle = user.fullName;
-        ctx.redirect(router.url('userPage'));
-      } catch (error) {
-        ctx.flash.set({ text: 'there was errors', type: 'danger' });
-        ctx.state.pageTitle = user.fullName;
-        ctx.redirect(router.url('changePassword'));
+        await user.destroy();
+        ctx.session = {};
+      } catch (err) {
+        ctx.flash.set({ text: 'There were errors', type: 'danger' });
+        console.error(err);
       }
+
+      ctx.redirect(router.url('root'));
     })
     .get('user', '/users/:id', async (ctx) => {
       const id = Number(ctx.params.id);
@@ -119,18 +146,5 @@ export default (router) => {
       ctx.state.pageTitle = user.fullName;
 
       ctx.render('users/user');
-    })
-    .delete('userDelete', '/users/:id', async (ctx) => {
-      const id = Number(ctx.params.id);
-      const user = await User.findOne({ where: id });
-      try {
-        await user.destroy();
-        ctx.session = {};
-      } catch (err) {
-        ctx.flash.set({ text: 'There were errors', type: 'danger' });
-        console.log(err);
-      }
-
-      ctx.redirect(router.url('root'));
     });
 };

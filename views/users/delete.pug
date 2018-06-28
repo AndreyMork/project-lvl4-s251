@@ -1,0 +1,8 @@
+extends /layouts/userCard.pug
+
+block cardContent
+  .text-center
+    h4 Are you sure?
+
+    a.btn.btn-outline-success.btn-lg.m-2(href=urlFor('userPage')) No
+    a.btn.btn-outline-danger.btn-lg.m-2(href=urlFor('userDelete', user.id) data-method='delete' rel='nofollow') Yes, delete my account
