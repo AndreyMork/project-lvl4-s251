@@ -23,7 +23,7 @@ import container from './container';
 export default () => {
   const app = new Koa();
 
-  app.keys = ['some secret hurr  123456'];
+  app.keys = [process.env.COOKIE_SECRET];
   app.use(session(app));
   app.use(flash());
 
