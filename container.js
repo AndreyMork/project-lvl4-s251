@@ -1,16 +1,11 @@
-import Sequelize from 'sequelize';
+import db from './models';
 import usersTableInterface from './migrations/usersTableInterface';
-// import validatejs from 'validate.js';
-// import User from './entities/User';
-// import db from './db';
-//
-// const validate = entity => validatejs(entity, entity.constructor.constraints);
-// // import logger from './lib/logger';
 
-const queryInterface = new Sequelize(process.env.DATABASE_URL).getQueryInterface();
+
+const queryInterface = db.sequelize.getQueryInterface();
 const usersTable = {
   down: () => usersTableInterface.down(queryInterface),
-  up: () => usersTableInterface.up(queryInterface, Sequelize),
+  up: () => usersTableInterface.up(queryInterface, db.Sequelize),
 };
 
-export default { Sequelize, usersTable };
+export default { db, usersTable };
