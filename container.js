@@ -1,4 +1,3 @@
-import dotenv from 'dotenv';
 import Sequelize from 'sequelize';
 import usersTableInterface from './migrations/usersTableInterface';
 // import validatejs from 'validate.js';
@@ -8,7 +7,6 @@ import usersTableInterface from './migrations/usersTableInterface';
 // const validate = entity => validatejs(entity, entity.constructor.constraints);
 // // import logger from './lib/logger';
 
-dotenv.load();
 const queryInterface = new Sequelize(process.env.DATABASE_URL).getQueryInterface();
 const usersTable = {
   down: () => usersTableInterface.down(queryInterface),

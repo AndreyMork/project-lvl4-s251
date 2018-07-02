@@ -1,5 +1,5 @@
+import 'dotenv/config';
 import request from 'supertest';
-import dotenv from 'dotenv';
 import app from '..';
 
 const routes = {
@@ -20,8 +20,6 @@ const routes = {
     status: 404,
   },
 };
-
-dotenv.load();
 
 describe('requests', () => {
   let server;
