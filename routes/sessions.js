@@ -1,8 +1,6 @@
-import models from '../models';
-import { buildFormObj } from '../lib';
-import encrypt from '../lib/encrypt';
+import { User } from '../models';
+import { buildFormObj, buildFlashMsg, encrypt } from '../lib';
 
-const { User } = models;
 export default (router) => {
   router
     .get('newSession', '/sessions/new', (ctx) => {
@@ -15,11 +13,7 @@ export default (router) => {
     })
     .post('session', '/session', async (ctx) => {
       const { email, password } = ctx.request.body.form;
-      const user = await User.findOne({
-        where: {
-          email,
-        },
-      });
+      const user = await User.findOne({ where: { email } });
 
       if (user && user.passwordDigest === encrypt(password)) {
         ctx.session.userId = user.id;
@@ -27,7 +21,8 @@ export default (router) => {
         return;
       }
 
-      ctx.flash.set({ type: 'danger', text: 'email or password were wrong' });
+      // TODO: error message
+      ctx.flash.set(buildFlashMsg('Email or password were wrong', 'danger'));
       ctx.session.email = email;
       ctx.redirect(router.url('newSession'));
     })

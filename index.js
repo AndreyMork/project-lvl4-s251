@@ -23,7 +23,7 @@ import container from './container';
 export default () => {
   const app = new Koa();
 
-  app.keys = ['some secret hurr  123456'];
+  app.keys = [process.env.COOKIE_SECRET];
   app.use(session(app));
   app.use(flash());
 
@@ -38,7 +38,6 @@ export default () => {
 
   app.use(bodyParser());
   app.use(methodOverride((req) => {
-    // return req?.body?._method;
     if (req.body && typeof req.body === 'object' && '_method' in req.body) {
       return req.body._method; // eslint-disable-line
     }

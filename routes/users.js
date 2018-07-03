@@ -1,9 +1,5 @@
 import { buildFormObj, buildFlashMsg } from '../lib';
-import models from '../models';
-import encrypt from '../lib/encrypt';
-
-
-const { User } = models;
+import { User } from '../models';
 
 export default (router) => {
   router
@@ -29,85 +25,14 @@ export default (router) => {
 
       try {
         await user.save();
-        ctx.flash.set(buildFlashMsg('User has been created', 'success'));
+        ctx.flash.set(buildFlashMsg('Your profile has been created', 'success'));
         ctx.session.userId = user.id;
         ctx.redirect(router.url('root'));
       } catch (err) {
+        // TODO: error message
         ctx.state.formObj = buildFormObj(user, err);
         ctx.state.pageTitle = 'Sign Up';
         ctx.render('users/new');
-      }
-    })
-    .get('userPage', '/users/my', async (ctx) => {
-      const id = ctx.session.userId;
-      const user = await User.findOne({ where: id });
-
-      ctx.state.user = user;
-      ctx.state.isLoggedUser = true;
-      ctx.state.pageTitle = user.fullName;
-
-      ctx.render('users/user');
-    })
-    .get('userSettings', '/users/settings', async (ctx) => {
-      const id = ctx.session.userId;
-      const user = await User.findOne({ where: id });
-
-      ctx.state.user = user;
-      ctx.state.isLoggedUser = true;
-      ctx.state.pageTitle = user.fullName;
-
-      ctx.render('users/settings');
-    })
-    .put('userSettings', '/users/settings', async (ctx) => {
-      const id = ctx.session.userId;
-      const user = await User.findOne({ where: id });
-
-      const { email, firstName, lastName } = ctx.request.body;
-
-      try {
-        await user.update({ email, firstName, lastName });
-        ctx.flash.set({ text: 'your data changed', type: 'success' });
-
-        ctx.state.pageTitle = user.fullName;
-        ctx.redirect(router.url('userPage'));
-      } catch (error) {
-        ctx.flash.set({ text: 'there was errors', type: 'danger' });
-        ctx.state.pageTitle = user.fullName;
-        ctx.redirect(router.url('userSettings'));
-      }
-    })
-    .get('changePassword', '/users/newPassword', async (ctx) => {
-      const id = ctx.session.userId;
-      const user = await User.findOne({ where: id });
-
-      ctx.state.user = user;
-      ctx.state.isLoggedUser = true;
-      ctx.state.pageTitle = user.fullName;
-
-      ctx.render('users/newPassword');
-    })
-    .put('changePassword', '/users/newPassword', async (ctx) => {
-      const id = ctx.session.userId;
-      const user = await User.findOne({ where: id });
-
-      const { oldPassword, newPassword } = ctx.request.body;
-
-      if (user.passwordDigest !== encrypt(oldPassword)) {
-        ctx.flash.set({ text: 'password is wrong', type: 'danger' });
-        ctx.redirect(router.url('changePassword'));
-      }
-
-      try {
-        await user.update({ password: newPassword });
-
-        ctx.flash.set({ text: 'password changed', type: 'success' });
-
-        ctx.state.pageTitle = user.fullName;
-        ctx.redirect(router.url('userPage'));
-      } catch (error) {
-        ctx.flash.set({ text: 'there was errors', type: 'danger' });
-        ctx.state.pageTitle = user.fullName;
-        ctx.redirect(router.url('changePassword'));
       }
     })
     .get('user', '/users/:id', async (ctx) => {
@@ -119,18 +44,5 @@ export default (router) => {
       ctx.state.pageTitle = user.fullName;
 
       ctx.render('users/user');
-    })
-    .delete('userDelete', '/users/:id', async (ctx) => {
-      const id = Number(ctx.params.id);
-      const user = await User.findOne({ where: id });
-      try {
-        await user.destroy();
-        ctx.session = {};
-      } catch (err) {
-        ctx.flash.set({ text: 'There were errors', type: 'danger' });
-        console.log(err);
-      }
-
-      ctx.redirect(router.url('root'));
     });
 };

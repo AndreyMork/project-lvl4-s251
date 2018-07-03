@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import gulp from 'gulp';
 import repl from 'repl';
 import getServer from '.';
