@@ -1,7 +1,7 @@
 {
   "name": "aethra-task-manager",
   "description": "",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "engines": {
     "node": "10.x.x"
   },
