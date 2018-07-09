@@ -3,27 +3,19 @@ import { User } from '../models';
 
 export default (router) => {
   router
-    .get('userPage', '/users/my', async (ctx) => {
+    .get('profileEdit', '/account/profile/edit', async (ctx) => {
       const id = ctx.session.userId;
       const user = await User.findOne({ where: id });
 
-      ctx.state.user = user;
-      ctx.state.isLoggedUser = true;
-      ctx.state.pageTitle = user.fullName;
+      const viewArgs = {
+        user,
+        pageTitle: 'Profile Settings',
+        formObj: buildFormObj(user),
+      };
 
-      ctx.render('users/user');
+      ctx.render('users/profile', viewArgs);
     })
-    .get('userSettings', '/users/my/profile', async (ctx) => {
-      const id = ctx.session.userId;
-      const user = await User.findOne({ where: id });
-
-      ctx.state.user = user;
-      ctx.state.pageTitle = user.fullName;
-      ctx.state.formObj = buildFormObj(user);
-
-      ctx.render('users/profile');
-    })
-    .put('userSettings', '/users/my/profile', async (ctx) => {
+    .put('profileEdit', '/account/profile/edit', async (ctx) => {
       const id = ctx.session.userId;
       const user = await User.findOne({ where: id });
 
@@ -34,28 +26,32 @@ export default (router) => {
         await user.update({ email, firstName, lastName });
         // TODO: message
         ctx.flash.set(buildFlashMsg('Your profile has been updated', 'success'));
-
-        ctx.state.pageTitle = user.fullName;
-        ctx.redirect(router.url('userPage'));
+        ctx.redirect(router.url('user', user.id));
       } catch (err) {
-        ctx.state.formObj = buildFormObj(user, err);
         // ctx.flash.set(buildFlahMsg('there was errors', 'danger'));
-        ctx.state.user = user;
-        ctx.state.pageTitle = user.fullName;
-        ctx.render('users/profile');
+
+        const viewArgs = {
+          user,
+          pageTitle: 'Profile Settings',
+          formObj: buildFormObj(user, err),
+        };
+
+        ctx.render('users/profile', viewArgs);
       }
     })
-    .get('changePassword', '/users/my/changePassword', async (ctx) => {
+    .get('changePassword', '/account/password/edit', async (ctx) => {
       const id = ctx.session.userId;
       const user = await User.findOne({ where: id });
 
-      ctx.state.user = user;
-      ctx.state.formObj = buildFormObj(user);
-      ctx.state.pageTitle = user.fullName;
+      const viewArgs = {
+        user,
+        pageTitle: 'Change Password',
+        formObj: buildFormObj(user),
+      };
 
-      ctx.render('users/changePassword');
+      ctx.render('users/changePassword', viewArgs);
     })
-    .put('changePassword', '/users/my/changePassword', async (ctx) => {
+    .put('changePassword', '/account/password/edit', async (ctx) => {
       const id = ctx.session.userId;
       const user = await User.findOne({ where: id });
 
@@ -74,8 +70,7 @@ export default (router) => {
 
           ctx.flash.set(buildFlashMsg('Your password was successfully changed', 'success'));
 
-          ctx.state.pageTitle = user.fullName;
-          ctx.redirect(router.url('userPage'));
+          ctx.redirect(router.url('user', user.id));
         } catch (error) {
           // TODO: error message
           ctx.flash.set(buildFlashMsg('There was errors', 'danger'));
@@ -83,16 +78,18 @@ export default (router) => {
         }
       }
     })
-    .get('userDelete', '/users/my/delete', async (ctx) => {
+    .get('userDelete', '/account/profile/delete', async (ctx) => {
       const id = ctx.session.userId;
       const user = await User.findOne({ where: id });
 
-      ctx.state.user = user;
-      ctx.state.pageTitle = user.fullName;
+      const viewArgs = {
+        user,
+        pageTitle: 'Delete Account',
+      };
 
-      ctx.render('users/delete');
+      ctx.render('users/delete', viewArgs);
     })
-    .delete('userDelete', '/users/my/delete', async (ctx) => {
+    .delete('userDelete', '/account/profile/delete', async (ctx) => {
       const id = ctx.session.userId;
       const user = await User.findOne({ where: id });
 
