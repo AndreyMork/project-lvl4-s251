@@ -1,12 +1,12 @@
 extends /layouts/userCard.pug
 
 block cardContent
-  +formFor({ url: urlFor('userSettings'), method: 'put' })
+  +formFor({ url: urlFor('profileEdit'), method: 'put' })
     +input('email', 'Email', { autofocus: true })
     +input('firstName', 'First Name')
     +input('lastName', 'Last Name')
     button.btn.btn-success.btn-lg.m-2(type='submit') Save
-    a.btn.btn-outline-danger.btn-lg.m-2(href=urlFor('userPage')) Cancel
+    a.btn.btn-outline-danger.btn-lg.m-2(href=urlFor('user', userId)) Cancel
 
 
   //- form(action=urlFor('userSettings') method='post' rel='nofollow')
