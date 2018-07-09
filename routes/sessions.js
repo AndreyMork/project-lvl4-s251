@@ -6,10 +6,13 @@ export default (router) => {
     .get('newSession', '/sessions/new', (ctx) => {
       const { email } = ctx.session;
       delete ctx.session.email;
-      ctx.state.formObj = buildFormObj({ email });
 
-      ctx.state.pageTitle = 'Sign In';
-      ctx.render('sessions/new');
+      const viewArgs = {
+        pageTitle: 'Sign In',
+        formObj: buildFormObj({ email }),
+      };
+
+      ctx.render('sessions/new', viewArgs);
     })
     .post('session', '/session', async (ctx) => {
       const { email, password } = ctx.request.body.form;

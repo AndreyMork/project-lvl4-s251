@@ -6,18 +6,22 @@ export default (router) => {
     .get('users', '/users', async (ctx) => {
       const users = await User.findAll();
 
-      ctx.state.users = users;
-      ctx.state.pageTitle = 'Users';
+      const viewArgs = {
+        users,
+        pageTitle: 'Users',
+      };
 
-      ctx.render('users');
+      ctx.render('users', viewArgs);
     })
     .get('newUser', '/users/new', (ctx) => {
       const user = User.build();
 
-      ctx.state.formObj = buildFormObj(user);
-      ctx.state.pageTitle = 'Sign Up';
+      const viewArgs = {
+        formObj: buildFormObj(user),
+        pageTitle: 'Sign Up',
+      };
 
-      ctx.render('users/new');
+      ctx.render('users/new', viewArgs);
     })
     .post('users', '/users', async (ctx) => {
       const { form } = ctx.request.body;
@@ -30,19 +34,24 @@ export default (router) => {
         ctx.redirect(router.url('root'));
       } catch (err) {
         // TODO: error message
-        ctx.state.formObj = buildFormObj(user, err);
-        ctx.state.pageTitle = 'Sign Up';
-        ctx.render('users/new');
+        const viewArgs = {
+          formObj: buildFormObj(user, err),
+          pageTitle: 'Sign Up',
+        };
+
+        ctx.render('users/new', viewArgs);
       }
     })
     .get('user', '/users/:id', async (ctx) => {
       const id = Number(ctx.params.id);
       const user = await User.findOne({ where: id });
 
-      ctx.state.user = user;
-      ctx.state.isLoggedUser = (user.id === ctx.session.userId);
-      ctx.state.pageTitle = user.fullName;
+      const viewArgs = {
+        user,
+        isLoggedUser: user.id === ctx.session.userId,
+        pageTitle: user.fullName,
+      };
 
-      ctx.render('users/user');
+      ctx.render('users/user', viewArgs);
     });
 };
