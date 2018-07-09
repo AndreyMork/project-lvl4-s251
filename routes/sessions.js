@@ -7,9 +7,7 @@ export default (router) => {
       const { email } = ctx.session;
       delete ctx.session.email;
       ctx.state.formObj = buildFormObj({ email });
-
-      ctx.state.pageTitle = 'Sign In';
-      ctx.render('sessions/new');
+      ctx.render('sessions/new', { pageTitle: 'Sign In' });
     })
     .post('session', '/session', async (ctx) => {
       const { email, password } = ctx.request.body.form;
