@@ -9,6 +9,25 @@ mixin formFor(options = {})
       input(name='_method' type='hidden' value=method)
     block
 
+mixin select(property, labelText, options = {})
+  - const labelId = `input for ${property}`;
+  - const { values } = options;
+  - const { defaultOpt } = options;
+  
+  .input-group.mb-2
+    .input-group-prepend
+      label.input-group-text(for=lableId)= labelText
+    select.custom-select(
+      name=getInputName(formObj, property)
+      id=labelId
+      required=options.required
+    )
+      if (defaultOpt)
+        option(value=defaultOpt.value selected)= defaultOpt.text
+      else
+        option(value='' selected) Choose...
+      each opt in values
+        option(value=opt.value)= opt.text
 
 mixin input(property, labelText, options = {})
   - const valueText = _.get(formObj.object, property, '');
@@ -16,16 +35,29 @@ mixin input(property, labelText, options = {})
   - const labelId = `input for ${property}`;
   - const isInvalid = formObj.errors[property] ? 'is-invalid' : '';
   .form-label-group
-    input.form-control(
-      class=isInvalid
-      id=labelId
-      value= `${property !== 'password' ? valueText : ''}`
-      name=getInputName(formObj, property)
-      placeholder=property
-      type=options.type 
-      autofocus=options.autofocus
-      required=options.required
-    )
+    if options.textarea
+      textarea.form-control(
+        rows=options.rows || 3 
+        class=isInvalid
+        id=labelId
+        value= `${property !== 'password' ? valueText : ''}`
+        name=getInputName(formObj, property)
+        placeholder=property
+        type=options.type 
+        autofocus=options.autofocus
+        required=options.required
+      )
+    else
+      input.form-control(
+        class=isInvalid
+        id=labelId
+        value= `${property !== 'password' ? valueText : ''}`
+        name=getInputName(formObj, property)
+        placeholder=property
+        type=options.type 
+        autofocus=options.autofocus
+        required=options.required
+      )
     label(for=labelId)= labelText
     if formObj.errors[property]
       .invalid-feedback= formObj.errors[property].map(({ message }) => message).join('. ')
