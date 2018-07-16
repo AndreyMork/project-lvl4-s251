@@ -17,7 +17,7 @@ export default (router) => {
     })
     .put('profileEdit', '/account/profile/edit', async (ctx) => {
       const id = ctx.session.userId;
-      const user = await User.findOne({ where: id });
+      const user = await User.findById(id);
 
       const { form } = ctx.request.body;
       const { email, firstName, lastName } = form;
@@ -91,7 +91,7 @@ export default (router) => {
     })
     .delete('userDelete', '/account/profile/delete', async (ctx) => {
       const id = ctx.session.userId;
-      const user = await User.findOne({ where: id });
+      const user = await User.findById(id);
 
       try {
         await user.destroy();

@@ -44,7 +44,7 @@ export default (router) => {
     })
     .get('user', '/users/:id', async (ctx) => {
       const id = Number(ctx.params.id);
-      const user = await User.findOne({ where: id });
+      const user = await User.findById(id);
 
       const viewArgs = {
         user,

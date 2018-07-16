@@ -18,8 +18,20 @@ html(lang='en')
             a.nav-link(href=urlFor('users')) Users
           li.nav-item
             a.nav-link(href=urlFor('about')) About
+          li.nav-item
+            a.nav-link(href=urlFor('tasks')) Tasks
         ul.navbar-nav
           if isSignedIn()
+            li.nav-item.dropdown
+              a.nav-link.dropdown-toggle(
+                data-toggle="dropdown"
+                href="#createDropdown"
+                role="button"
+                aria-haspopup="true"
+                aria-expanded="false"
+              ) Create
+              .dropdown-menu
+                a.dropdown-item(href=urlFor('createTask')) New Task 
             li.nav-item
               a.nav-link(href=urlFor('user', userId)) My Page
             li.nav-item
