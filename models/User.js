@@ -89,6 +89,14 @@ export default (sequelize, DataTypes) => {
         allowNull: false,
       },
     });
+    // User.hasMany(Task, {
+    //   through: 'user_project',
+    //   as: 'tasks',
+    //   foreignKey: {
+    //     name: 'user_id',
+    //     allowNull: false,
+    //   },
+    // });
   };
 
   return User;
