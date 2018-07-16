@@ -1,19 +1,29 @@
 import Sequelize from 'sequelize';
 
-const db = {};
-const sequelize = new Sequelize(process.env.DATABASE_URL);
+const sequelize = new Sequelize(process.env.DATABASE_URL, {
+  operatorsAliases: Sequelize.Op,
+  snakecase: true,
+});
 
-export const User = sequelize.import('./User.js');
-db[User.name] = User;
+const models = {
+  User: sequelize.import('./User.js'),
+  Task: sequelize.import('./Task.js'),
+  TaskStatus: sequelize.import('./TaskStatus.js'),
+  // Tags: sequelize.import('./tags.js'),
+};
 
-Object.keys(db).forEach((modelName) => {
-  if (db[modelName].associate) {
-    db[modelName].associate(db);
+export const { User } = models;
+export const { Task } = models;
+export const { TaskStatus } = models;
+// export const { Tags } = models;
+
+Object.values(models).forEach(async (model) => {
+  if (model.associate) {
+    await model.associate(models);
   }
 });
 
+models.sequelize = sequelize;
+models.Sequelize = Sequelize;
 
-db.sequelize = sequelize;
-db.Sequelize = Sequelize;
-
-export default db;
+export default models;
