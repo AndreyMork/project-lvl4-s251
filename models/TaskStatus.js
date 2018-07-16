@@ -2,8 +2,7 @@ export default (sequelize, DataTypes) => {
   const TaskStatus = sequelize.define('task_status', {
     name: {
       type: DataTypes.STRING,
-      primaryKey: true,
-      // unique: true,
+      unique: true,
       validate: {
         notEmpty: {
           args: true,
@@ -13,6 +12,20 @@ export default (sequelize, DataTypes) => {
     },
   }, {
     underscored: true,
+  });
+
+  TaskStatus.getDefault = () => TaskStatus.findOne({
+    where: {
+      name: 'new',
+    },
+  });
+
+  TaskStatus.getNotDefault = () => TaskStatus.findAll({
+    where: {
+      name: {
+        not: 'new',
+      },
+    },
   });
 
   // TaskStatus.associate = () => {};
