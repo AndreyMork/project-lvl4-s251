@@ -22,8 +22,20 @@ export default (sequelize, DataTypes) => {
       },
     });
 
-    Task.belongsTo(TaskStatus, { as: 'status' });
-    // assignTo: {},
+    Task.belongsTo(User, {
+      as: 'assignee',
+      // constraints: false,
+      foreignKey: {
+        allowNull: false,
+      },
+    });
+
+    Task.belongsTo(TaskStatus, {
+      as: 'status',
+      foreignKey: {
+        allowNull: false,
+      },
+    });
     // tags: {},
   };
 
