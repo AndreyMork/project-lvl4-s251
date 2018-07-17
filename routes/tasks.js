@@ -57,7 +57,7 @@ export default (router) => {
         defaultStatus,
         users,
         formObj: buildFormObj(task),
-        pageTitle: 'New task',
+        pageTitle: 'New Task',
       };
 
       ctx.render('tasks/new', viewArgs);
