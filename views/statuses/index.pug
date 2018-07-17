@@ -16,5 +16,6 @@ block content
           th(scope='row')= counter
           td= status.name
           td.text-right 
-            a.mr-2(href=urlFor('editStatus', status.id)) rename    
-            a.text-danger(href=urlFor('deleteStatus', status.id)) delete
+            if isSignedIn()
+              a.mr-2(href=urlFor('editStatus', status.id)) rename    
+              a.text-danger(href=urlFor('deleteStatus', status.id)) delete

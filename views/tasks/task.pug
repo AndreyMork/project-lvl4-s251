@@ -22,5 +22,6 @@ block cardContent
       tr
         th(scope='row') Id:
         td= task.id
-  a.btn.btn-info.btn-lg.m-2(href=urlFor('editTask', task.id)) Edit
-  a.btn.btn-outline-danger.btn-lg.m-2(href=urlFor('deleteTask', task.id)) Delete
+  if isSignedIn()
+    a.btn.btn-info.btn-lg.m-2(href=urlFor('editTask', task.id)) Edit
+    a.btn.btn-outline-danger.btn-lg.m-2(href=urlFor('deleteTask', task.id)) Delete
