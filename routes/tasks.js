@@ -141,7 +141,7 @@ export default (router) => {
 
       const viewArgs = {
         task,
-        pageTitle: `Delet ${task.name}`,
+        pageTitle: `Delete ${task.name}`,
       };
 
       ctx.render('tasks/delete', viewArgs);
