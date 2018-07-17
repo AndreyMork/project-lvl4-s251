@@ -1,25 +1,43 @@
 extends /layouts/application.pug
 
 block content
-  table.table.table-striped.table-hover
-    caption List of tasks
-    thead
-      tr
-        th(scope='col') #
-        th(scope='col') Name
-        th(scope='col') Assigned To
-        th(scope='col') Status
-        th(scope='col') Creator
-    tbody
-      - let counter = 0
-      each task in tasks
-        - counter += 1
-        tr
-          th(scope='row')= counter
-          td
-            a(href=urlFor('task', task.id))= task.name
-          td
-            a(href=urlFor('user', task.assignee.id))= task.assignee.fullName
-          td= task.status.name
-          td
-            a(href=urlFor('user', task.creator.id))= task.creator.fullName
+  .card
+    .card-header
+      h4.display.text-center Filters
+    .card-body.bg-light
+      form(action=urlFor('tasks') method='get')
+        .form-group
+          .row
+            .col
+              +filterSelect('status_id', 'Status', statuses)
+            .col
+              +filterSelect('assignee_id', 'Assigned To', users)
+            .col
+              +filterSelect('tag_id', 'Tags', [])
+          .text-center
+            button.btn.btn-lg.btn-outline-success.m-2(type='submit') Apply
+            a.btn.btn-lg.btn-outline-danger.m-2(href=urlFor('tasks')) Reset
+            if isSignedIn()
+              a.btn.btn-outline-info.btn-lg.m-2(href=urlFor('tasks', { query: { assignee_id: userId } } )) My Tasks
+      table.table.table-hover
+        caption List of tasks
+        thead
+          tr
+            th(scope='col') #
+            th(scope='col') Name
+            th(scope='col') Assigned To
+            th(scope='col') Status
+            th(scope='col') Creator
+        tbody
+          - let counter = 0
+          each task in tasks
+            - counter += 1
+            tr
+              th(scope='row')= counter
+              td
+                a(href=urlFor('task', task.id))= task.name
+              td
+                a(href=urlFor('user', task.assignee.id))= task.assignee.fullName
+              td= task.status.name
+              td
+                a(href=urlFor('user', task.creator.id))= task.creator.fullName
