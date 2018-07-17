@@ -8,7 +8,7 @@ block cardContent
       h4 Are you sure?
       a.btn.btn-outline-success.btn-lg.m-2(href=urlFor('deleteStatus', status.id) data-method='delete' rel='nofollow') Yes, delete
     else
-      h4 You can't delete this tag.
+      h4.text-left.display You can't delete this status.
       .text-left It's being used by these tasks:
       each task in taskWithThisStatus
         .text-left
