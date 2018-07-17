@@ -1,15 +1,35 @@
 import { User, Task, TaskStatus } from '../models';
 import { buildFormObj, buildFlashMsg } from '../lib';
 
+const getFilters = query => Object.keys(query).reduce((acc, key) => {
+  if (!query[key]) {
+    return acc;
+  }
+
+  return { ...acc, [key]: Number(query[key]) };
+}, {});
+
 export default (router) => {
   router
     .get('tasks', '/tasks', async (ctx) => {
+      const { query } = ctx.request;
+      const filters = getFilters(query);
+
       const tasks = await Task.findAll({
+        where: filters,
         include: ['creator', 'status', 'assignee'],
       });
 
+      const users = await User.findAll()
+        .then(vals => vals.map(el => ({ text: el.fullName, value: el.id })));
+      const statuses = await TaskStatus.findAll()
+        .then(vals => vals.map(el => ({ text: el.name, value: el.id })));
+
       const viewArgs = {
         tasks,
+        users,
+        statuses,
+        filters,
         pageTitle: 'Tasks',
       };
 
