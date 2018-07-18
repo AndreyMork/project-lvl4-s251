@@ -14,6 +14,11 @@ export default (router) => {
       ctx.render('statuses', viewArgs);
     })
     .post('statuses', '/statuses', async (ctx) => {
+      if (!ctx.state.isSignedIn()) {
+        ctx.throw(401);
+        return;
+      }
+
       const { form } = ctx.request.body;
 
       const task = TaskStatus.build(form);
@@ -34,6 +39,11 @@ export default (router) => {
       }
     })
     .get('createStatus', '/statuses/new', async (ctx) => {
+      if (!ctx.state.isSignedIn()) {
+        ctx.redirect(router.url('newSession'));
+        return;
+      }
+
       const status = TaskStatus.build();
 
       const viewArgs = {
@@ -45,6 +55,11 @@ export default (router) => {
       ctx.render('statuses/new', viewArgs);
     })
     .get('editStatus', '/statuses/:id/edit', async (ctx) => {
+      if (!ctx.state.isSignedIn()) {
+        ctx.redirect(router.url('newSession'));
+        return;
+      }
+
       const id = Number(ctx.params.id);
       const status = await TaskStatus.findById(id);
 
@@ -57,6 +72,11 @@ export default (router) => {
       ctx.render('statuses/edit', viewArgs);
     })
     .put('editStatus', '/statuses/:id/edit', async (ctx) => {
+      if (!ctx.state.isSignedIn()) {
+        ctx.throw(401);
+        return;
+      }
+
       const id = Number(ctx.params.id);
       const status = await TaskStatus.findById(id);
 
@@ -78,6 +98,11 @@ export default (router) => {
       }
     })
     .get('deleteStatus', '/statuses/:id/delete', async (ctx) => {
+      if (!ctx.state.isSignedIn()) {
+        ctx.redirect(router.url('newSession'));
+        return;
+      }
+
       const id = Number(ctx.params.id);
       const status = await TaskStatus.findById(id);
       const { count, rows } = await Task.findAndCount({
@@ -97,6 +122,11 @@ export default (router) => {
       ctx.render('statuses/delete', viewArgs);
     })
     .delete('deleteStatus', '/statuses/:id/delete', async (ctx) => {
+      if (!ctx.state.isSignedIn()) {
+        ctx.throw(401);
+        return;
+      }
+
       const id = Number(ctx.params.id);
       const status = await TaskStatus.findById(id);
 

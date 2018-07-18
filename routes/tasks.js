@@ -36,6 +36,11 @@ export default (router) => {
       ctx.render('tasks', viewArgs);
     })
     .post('tasks', '/tasks', async (ctx) => {
+      if (!ctx.state.isSignedIn()) {
+        ctx.throw(401);
+        return;
+      }
+
       const { form } = ctx.request.body;
 
       const task = Task.build(form);
@@ -63,6 +68,11 @@ export default (router) => {
       }
     })
     .get('createTask', '/tasks/new', async (ctx) => {
+      if (!ctx.state.isSignedIn()) {
+        ctx.redirect(router.url('newSession'));
+        return;
+      }
+
       const task = Task.build();
 
       const defaultStatus = await TaskStatus.getDefault()
@@ -94,6 +104,11 @@ export default (router) => {
       ctx.render('tasks/task', viewArgs);
     })
     .get('editTask', '/tasks/:id/edit', async (ctx) => {
+      if (!ctx.state.isSignedIn()) {
+        ctx.redirect(router.url('newSession'));
+        return;
+      }
+
       const id = Number(ctx.params.id);
       const task = await Task.findById(id, { include: ['creator', 'status', 'assignee'] });
 
@@ -127,6 +142,11 @@ export default (router) => {
       ctx.render('tasks/edit', viewArgs);
     })
     .put('editTask', '/tasks/:id/edit', async (ctx) => {
+      if (!ctx.state.isSignedIn()) {
+        ctx.throw(401);
+        return;
+      }
+
       const id = Number(ctx.params.id);
       const task = await Task.findById(id);
 
@@ -156,6 +176,11 @@ export default (router) => {
       }
     })
     .get('deleteTask', '/tasks/:id/delete', async (ctx) => {
+      if (!ctx.state.isSignedIn()) {
+        ctx.redirect(router.url('newSession'));
+        return;
+      }
+
       const id = Number(ctx.params.id);
       const task = await Task.findById(id, { include: ['creator', 'status', 'assignee'] });
 
@@ -167,6 +192,11 @@ export default (router) => {
       ctx.render('tasks/delete', viewArgs);
     })
     .delete('deleteTask', '/tasks/:id/delete', async (ctx) => {
+      if (!ctx.state.isSignedIn()) {
+        ctx.throw(401);
+        return;
+      }
+
       const id = Number(ctx.params.id);
       const task = await Task.findById(id);
 

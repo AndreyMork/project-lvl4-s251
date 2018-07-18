@@ -4,6 +4,11 @@ import { User } from '../models';
 export default (router) => {
   router
     .get('profileEdit', '/account/profile/edit', async (ctx) => {
+      if (!ctx.state.isSignedIn()) {
+        ctx.redirect(router.url('newSession'));
+        return;
+      }
+
       const id = ctx.session.userId;
       const user = await User.findOne({ where: id });
 
@@ -16,6 +21,11 @@ export default (router) => {
       ctx.render('users/profile', viewArgs);
     })
     .put('profileEdit', '/account/profile/edit', async (ctx) => {
+      if (!ctx.state.isSignedIn()) {
+        ctx.throw(401);
+        return;
+      }
+
       const id = ctx.session.userId;
       const user = await User.findById(id);
 
@@ -40,6 +50,11 @@ export default (router) => {
       }
     })
     .get('changePassword', '/account/password/edit', async (ctx) => {
+      if (!ctx.state.isSignedIn()) {
+        ctx.redirect(router.url('newSession'));
+        return;
+      }
+
       const id = ctx.session.userId;
       const user = await User.findOne({ where: id });
 
@@ -52,6 +67,11 @@ export default (router) => {
       ctx.render('users/changePassword', viewArgs);
     })
     .put('changePassword', '/account/password/edit', async (ctx) => {
+      if (!ctx.state.isSignedIn()) {
+        ctx.throw(401);
+        return;
+      }
+
       const id = ctx.session.userId;
       const user = await User.findOne({ where: id });
 
@@ -79,6 +99,11 @@ export default (router) => {
       }
     })
     .get('userDelete', '/account/profile/delete', async (ctx) => {
+      if (!ctx.state.isSignedIn()) {
+        ctx.redirect(router.url('newSession'));
+        return;
+      }
+
       const id = ctx.session.userId;
       const user = await User.findOne({ where: id });
 
@@ -90,6 +115,11 @@ export default (router) => {
       ctx.render('users/delete', viewArgs);
     })
     .delete('userDelete', '/account/profile/delete', async (ctx) => {
+      if (!ctx.state.isSignedIn()) {
+        ctx.throw(401);
+        return;
+      }
+
       const id = ctx.session.userId;
       const user = await User.findById(id);
 
