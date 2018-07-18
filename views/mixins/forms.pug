@@ -79,6 +79,7 @@ mixin tagsInput(property, labelText, tagStr)
 
 mixin input(property, labelText, options = {})
   - const valueText = _.get(formObj.object, property, '');
+  - console.log(valueText)
   - options.type = _.get(options, 'type', 'text');
   - const labelId = `input for ${property}`;
   - const isInvalid = formObj.errors[property] ? 'is-invalid' : '';
@@ -88,13 +89,12 @@ mixin input(property, labelText, options = {})
         rows=options.rows || 3 
         class=isInvalid
         id=labelId
-        value= `${property !== 'password' ? valueText : ''}`
         name=getInputName(formObj, property)
         placeholder=property
         type=options.type 
         autofocus=options.autofocus
         required=options.required
-      )
+      )= `${property !== 'password' ? valueText : ''}`
     else
       input.form-control(
         class=isInvalid

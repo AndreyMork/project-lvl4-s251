@@ -140,7 +140,7 @@ export default (router) => {
       }
 
       const id = Number(ctx.params.id);
-      const task = await Task.findById(id, { include: ['creator', 'status', 'assignee'] });
+      const task = await Task.findById(id, { include: ['creator', 'status', 'assignee', 'tags'] });
 
       const currentStatus = { value: task.status.id, text: task.status.name };
       const statuses = await TaskStatus.findAll({
@@ -188,7 +188,7 @@ export default (router) => {
       const { name, description } = form;
       const status = await TaskStatus.findById(form.statusId);
       const assignee = await User.findById(form.assigneeId);
-      console.log(form);
+
       const tags = await getTags(form.tags);
 
       task.setStatus(status, { save: false });
