@@ -1,5 +1,7 @@
-extends /layouts/userCard.pug
+extends /layouts/card.pug
 
+block header
+  h1= user.fullName
 block cardContent
   table.table.table-borderless.table-sm
     tbody

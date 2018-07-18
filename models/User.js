@@ -1,15 +1,50 @@
 import uuid from 'uuid-js';
-import encrypt from '../lib/encrypt';
+import { capitalize, encrypt } from '../lib';
 
 export default (sequelize, DataTypes) => {
-  const User = sequelize.define('User', {
-    firstName: DataTypes.STRING,
-    lastName: DataTypes.STRING,
+  const User = sequelize.define('user', {
+    firstName: {
+      type: DataTypes.STRING,
+      field: 'first_name',
+      set(value) {
+        this.setDataValue('firstName', capitalize(value));
+      },
+      validate: {
+        isOneWord(value) {
+          if (value.split(' ').length > 1) {
+            throw new Error('First name must be one word');
+          }
+        },
+      },
+    },
+    lastName: {
+      type: DataTypes.STRING,
+      field: 'last_name',
+      set(value) {
+        this.setDataValue('lastName', capitalize(value));
+      },
+      validate: {
+        isOneWord(value) {
+          if (value.split(' ').length > 1) {
+            throw new Error('Last name must be one word');
+          }
+        },
+      },
+    },
     email: {
       type: DataTypes.STRING,
-      unique: true,
+      unique: {
+        args: true,
+        msg: 'User with this email is already exist',
+      },
+      set(value) {
+        this.setDataValue('email', value.trim().toLowerCase());
+      },
       validate: {
-        isEmail: true,
+        isEmail: {
+          args: true,
+          msg: "Your email isn't valid",
+        },
       },
     },
     uuid: {
@@ -18,6 +53,7 @@ export default (sequelize, DataTypes) => {
     },
     passwordDigest: {
       type: DataTypes.STRING,
+      field: 'password_digest',
       validate: {
         notEmpty: true,
       },
@@ -27,10 +63,12 @@ export default (sequelize, DataTypes) => {
       set(value) {
         this.setDataValue('passwordDigest', encrypt(value));
         this.setDataValue('password', value);
-        return value;
       },
       validate: {
-        len: [1, +Infinity],
+        len: {
+          args: [4, +Infinity],
+          msg: 'Minimum password length is 4',
+        },
       },
     },
   }, {
@@ -39,11 +77,27 @@ export default (sequelize, DataTypes) => {
         return (this.firstName || this.lastName)
           ? `${this.firstName} ${this.lastName}` : this.uuid;
       },
-      // associate(models) {
-      //   // associations can be defined here
-      // },
     },
+    underscored: true,
   });
+
+  User.associate = ({ Task }) => {
+    User.hasMany(Task, {
+      as: 'createdProjects',
+      foreignKey: {
+        name: 'creator_id',
+        allowNull: false,
+      },
+    });
+    // User.hasMany(Task, {
+    //   through: 'user_project',
+    //   as: 'tasks',
+    //   foreignKey: {
+    //     name: 'user_id',
+    //     allowNull: false,
+    //   },
+    // });
+  };
 
   return User;
 };

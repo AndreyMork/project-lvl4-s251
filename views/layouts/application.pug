@@ -17,9 +17,24 @@ html(lang='en')
           li.nav-item
             a.nav-link(href=urlFor('users')) Users
           li.nav-item
+            a.nav-link(href=urlFor('tasks')) Tasks
+          li.nav-item
+            a.nav-link(href=urlFor('statuses')) Statuses
+          li.nav-item
             a.nav-link(href=urlFor('about')) About
         ul.navbar-nav
           if isSignedIn()
+            li.nav-item.dropdown
+              a.nav-link.dropdown-toggle(
+                data-toggle="dropdown"
+                href="#createDropdown"
+                role="button"
+                aria-haspopup="true"
+                aria-expanded="false"
+              ) Create
+              .dropdown-menu
+                a.dropdown-item(href=urlFor('createTask')) New Task
+                a.dropdown-item(href=urlFor('createStatus')) New Status
             li.nav-item
               a.nav-link(href=urlFor('user', userId)) My Page
             li.nav-item

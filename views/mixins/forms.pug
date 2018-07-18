@@ -9,23 +9,117 @@ mixin formFor(options = {})
       input(name='_method' type='hidden' value=method)
     block
 
+mixin select(property, labelText, options = {})
+  - const labelId = `input for ${property}`;
+  - const { values } = options;
+  - const { defaultOpt } = options;
+  
+  .input-group.mb-2
+    .input-group-prepend
+      label.input-group-text(for=lableId)= labelText
+    select.custom-select(
+      name=getInputName(formObj, property)
+      id=labelId
+      required=options.required
+    )
+      if (defaultOpt)
+        option(value=defaultOpt.value selected)= defaultOpt.text
+      else
+        option(value='' selected) Choose...
+      each opt in values
+        option(value=opt.value)= opt.text
+
+        mixin select(property, labelText, options = {})
+          - const labelId = `input for ${property}`;
+          - const { values } = options;
+          - const { defaultOpt } = options;
+          
+          .input-group.mb-2
+            .input-group-prepend
+              label.input-group-text(for=lableId)= labelText
+            select.custom-select(
+              name=getInputName(formObj, property)
+              id=labelId
+              required=options.required
+            )
+              if (defaultOpt)
+                option(value=defaultOpt.value selected)= defaultOpt.text
+              else
+                option(value='' selected) Choose...
+              each opt in values
+                option(value=opt.value)= opt.text
+
+mixin filterSelect(property, labelText, values)
+  - const labelId = `input for ${property}`;
+
+  .input-group.mb-2
+    .input-group-prepend
+      label.input-group-text(for=lableId)= labelText
+    select.custom-select(
+      name=property
+      id=labelId
+    )
+      option(value='') Any
+      each opt in values
+        - const isSelected = opt.value === filters[property];
+        option(value=opt.value selected=isSelected)= opt.text
+
+mixin tagsInput(property, labelText, tagStr)
+  - const labelId = `input for ${property}`;
+
+  .form-label-group
+      input.form-control(
+        id=labelId
+        value=tagStr
+        name=`form[${property}]`
+        placeholder=property
+        type="text" 
+      )
+      label(for=labelId)= labelText
 
 mixin input(property, labelText, options = {})
   - const valueText = _.get(formObj.object, property, '');
+  - console.log(valueText)
   - options.type = _.get(options, 'type', 'text');
   - const labelId = `input for ${property}`;
   - const isInvalid = formObj.errors[property] ? 'is-invalid' : '';
   .form-label-group
-    input.form-control(
-      class=isInvalid
-      id=labelId
-      value= `${property !== 'password' ? valueText : ''}`
-      name=getInputName(formObj, property)
-      placeholder=property
-      type=options.type 
-      autofocus=options.autofocus
-      required=options.required
-    )
+    if options.textarea
+      textarea.form-control(
+        rows=options.rows || 3 
+        class=isInvalid
+        id=labelId
+        name=getInputName(formObj, property)
+        placeholder=property
+        type=options.type 
+        autofocus=options.autofocus
+        required=options.required
+      )= `${property !== 'password' ? valueText : ''}`
+    else
+      input.form-control(
+        class=isInvalid
+        id=labelId
+        value= `${property !== 'password' ? valueText : ''}`
+        name=getInputName(formObj, property)
+        placeholder=property
+        type=options.type 
+        autofocus=options.autofocus
+        required=options.required
+      )
     label(for=labelId)= labelText
     if formObj.errors[property]
       .invalid-feedback= formObj.errors[property].map(({ message }) => message).join('. ')
+
+mixin tagSelector(property, labelText, tags)
+  - const labelId = `input for ${property}`;
+
+  .input-group.mb-2
+    .input-group-prepend
+      label.input-group-text(for=lableId)= labelText
+    select.custom-select(
+      name=property
+      id=labelId
+    )
+      option(value='') Any
+      each tag in tags
+        option(value=tag.value)= tag.text

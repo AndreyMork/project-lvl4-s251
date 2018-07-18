@@ -1,0 +1,30 @@
+extends /layouts/card.pug
+
+block header
+  h1= task.name
+  - const tagColor = 'feb062';
+  each tag in task.tags
+    span.badge.m-1(style=`background-color: #${tagColor}`)= tag.name
+block cardContent
+  table.table.table-borderless.table-sm
+    tbody
+      tr
+        th(scope='row') Status:
+        td= task.status.name
+      tr
+        th(scope='row') Assigned To:
+        td
+          a(href=urlFor('user', task.assignee.id))= task.assignee.fullName
+      tr
+        th(scope='row') Description:
+        td= task.description
+      tr
+        th(scope='row') Creator:
+        td
+          a(href=urlFor('user', task.creator.id))= task.creator.fullName
+      tr
+        th(scope='row') Id:
+        td= task.id
+  h4.display Are you sure?
+  a.btn.btn-outline-success.btn-lg.m-2(href=urlFor('deleteTask', task.id) data-method='delete' rel='nofollow') Yes, delete
+  a.btn.btn-outline-danger.btn-lg.m-2(href=urlFor('task', task.id)) Cancel
