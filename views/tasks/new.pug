@@ -14,5 +14,7 @@ block cardContent
       required: true,
     })
     +input('description', 'Description', { textarea: true, rows: 5 })
+    +input('tags', 'Input tags separated by comma')
     button.btn.btn-outline-success.btn-lg.col-6.m-2(type='submit') Save
     a.btn.btn-outline-danger.btn-lg.col-5.m-2(href=urlFor('root')) Cancel
+    

@@ -1,3 +1,5 @@
+import { omit } from 'lodash';
+
 export default (sequelize, DataTypes) => {
   const Task = sequelize.define('task', {
     name: {
@@ -14,7 +16,7 @@ export default (sequelize, DataTypes) => {
     underscored: true,
   });
 
-  Task.associate = async ({ User, TaskStatus }) => {
+  Task.associate = async ({ User, TaskStatus, Tag }) => {
     Task.belongsTo(User, {
       as: 'creator',
       foreignKey: {
@@ -24,7 +26,6 @@ export default (sequelize, DataTypes) => {
 
     Task.belongsTo(User, {
       as: 'assignee',
-      // constraints: false,
       foreignKey: {
         allowNull: false,
       },
@@ -36,7 +37,25 @@ export default (sequelize, DataTypes) => {
         allowNull: false,
       },
     });
-    // tags: {},
+
+    Task.belongsToMany(Tag, {
+      through: 'task_tag',
+    });
+  };
+  Task.findAndFilterAll = async (filters) => {
+    const { tagId } = filters;
+    const preparedFilters = omit(filters, 'tagId');
+
+    const taskHasTag = task => task.tags.map(tag => tag.id).includes(tagId);
+    const filterByTagId = tasks => tasks
+      .filter(task => taskHasTag(task, tagId));
+
+    const preFilteredTasks = await Task.findAll({
+      where: preparedFilters,
+      include: ['creator', 'status', 'assignee', 'tags'],
+    });
+
+    return tagId ? filterByTagId(preFilteredTasks) : preFilteredTasks;
   };
 
   return Task;

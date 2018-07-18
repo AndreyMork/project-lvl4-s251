@@ -13,7 +13,7 @@ block content
             .col
               +filterSelect('assignee_id', 'Assigned To', users)
             .col
-              +filterSelect('tag_id', 'Tags', [])
+              +filterSelect('tagId', 'Tag', tags)
           .text-center
             button.btn.btn-lg.btn-outline-success.m-2(type='submit') Apply
             a.btn.btn-lg.btn-outline-danger.m-2(href=urlFor('tasks')) Reset
@@ -25,8 +25,9 @@ block content
           tr
             th(scope='col') #
             th(scope='col') Name
-            th(scope='col') Assigned To
             th(scope='col') Status
+            th(scope='col') Assigned To
+            th(scope='col') Tags
             th(scope='col') Creator
         tbody
           - let counter = 0
@@ -36,8 +37,12 @@ block content
               th(scope='row')= counter
               td
                 a(href=urlFor('task', task.id))= task.name
+              td= task.status.name
               td
                 a(href=urlFor('user', task.assignee.id))= task.assignee.fullName
-              td= task.status.name
+              td
+                - const tagColor = 'feb062';
+                each tag in task.tags
+                  span.badge.m-1(style=`background-color: #${tagColor}`)= tag.name
               td
                 a(href=urlFor('user', task.creator.id))= task.creator.fullName

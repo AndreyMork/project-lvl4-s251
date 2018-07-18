@@ -1,5 +1,12 @@
-import { User, Task, TaskStatus } from '../models';
-import { buildFormObj, buildFlashMsg } from '../lib';
+import _ from 'lodash';
+import {
+  User,
+  Task,
+  TaskStatus,
+  Tag,
+} from '../models';
+import { buildFormObj, buildFlashMsg, capitalize } from '../lib';
+
 
 const getFilters = query => Object.keys(query).reduce((acc, key) => {
   if (!query[key]) {
@@ -9,26 +16,42 @@ const getFilters = query => Object.keys(query).reduce((acc, key) => {
   return { ...acc, [key]: Number(query[key]) };
 }, {});
 
+
+const getTags = async (str) => {
+  const separatedStr = str.split(',').map(capitalize);
+
+  const tags = await Promise.all(separatedStr
+    .filter(tagStr => tagStr !== '')
+    .map(tagStr => Tag.findOrCreate({
+      where: {
+        name: tagStr,
+      },
+    })));
+
+  return _.uniqBy(tags.map(([tag]) => tag), tag => tag.id);
+};
+
+
 export default (router) => {
   router
     .get('tasks', '/tasks', async (ctx) => {
       const { query } = ctx.request;
       const filters = getFilters(query);
 
-      const tasks = await Task.findAll({
-        where: filters,
-        include: ['creator', 'status', 'assignee'],
-      });
+      const tasks = await Task.findAndFilterAll(filters);
 
       const users = await User.findAll()
         .then(vals => vals.map(el => ({ text: el.fullName, value: el.id })));
       const statuses = await TaskStatus.findAll()
+        .then(vals => vals.map(el => ({ text: el.name, value: el.id })));
+      const tags = await Tag.findAll()
         .then(vals => vals.map(el => ({ text: el.name, value: el.id })));
 
       const viewArgs = {
         tasks,
         users,
         statuses,
+        tags,
         filters,
         pageTitle: 'Tasks',
       };
@@ -47,6 +70,7 @@ export default (router) => {
       const creator = await User.findById(ctx.session.userId);
       const status = await TaskStatus.findById(form.statusId);
       const assignee = await User.findById(form.assigneeId);
+      const tags = await getTags(form.tags);
 
       task.setCreator(creator, { save: false });
       task.setStatus(status, { save: false });
@@ -54,6 +78,8 @@ export default (router) => {
 
       try {
         await task.save();
+        await task.addTags(tags);
+
         ctx.flash.set(buildFlashMsg('Task was successfully created', 'success'));
         ctx.redirect(router.url('tasks'));
       } catch (err) {
@@ -94,10 +120,14 @@ export default (router) => {
     })
     .get('task', '/tasks/:id', async (ctx) => {
       const id = Number(ctx.params.id);
-      const task = await Task.findById(id, { include: ['creator', 'status', 'assignee'] });
+      const task = await Task.findById(id, { include: ['creator', 'status', 'assignee', 'tags'] });
+
+      const tags = await Tag.findAll()
+        .then(values => values.map(el => ({ text: el.name, value: el.id })));
 
       const viewArgs = {
         task,
+        tags,
         pageTitle: task.name,
       };
 
@@ -128,6 +158,8 @@ export default (router) => {
           },
         },
       }).then(values => values.map(el => ({ text: el.fullName, value: el.id })));
+      const tagStr = await task.getTags()
+        .then(values => values.map(tag => tag.name).join(', '));
 
       const viewArgs = {
         task,
@@ -135,6 +167,7 @@ export default (router) => {
         statuses,
         currentAssignee,
         users,
+        tagStr,
         formObj: buildFormObj(task),
         pageTitle: 'Edit Task',
       };
@@ -155,6 +188,8 @@ export default (router) => {
       const { name, description } = form;
       const status = await TaskStatus.findById(form.statusId);
       const assignee = await User.findById(form.assigneeId);
+      console.log(form);
+      const tags = await getTags(form.tags);
 
       task.setStatus(status, { save: false });
       task.setAssignee(assignee, { save: false });
@@ -162,6 +197,7 @@ export default (router) => {
       try {
         await task.update({ name, description });
         await task.save();
+        await task.setTags(tags);
         ctx.flash.set(buildFlashMsg('Task was successfully changed', 'success'));
         ctx.redirect(router.url('task', task.id));
       } catch (err) {
@@ -182,7 +218,7 @@ export default (router) => {
       }
 
       const id = Number(ctx.params.id);
-      const task = await Task.findById(id, { include: ['creator', 'status', 'assignee'] });
+      const task = await Task.findById(id, { include: ['creator', 'status', 'assignee', 'tags'] });
 
       const viewArgs = {
         task,

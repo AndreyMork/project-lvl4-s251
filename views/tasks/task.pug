@@ -2,6 +2,9 @@ extends /layouts/card.pug
 
 block header
   h1= task.name
+  - const tagColor = 'feb062';
+  each tag in task.tags
+    span.badge.m-1(style=`background-color: #${tagColor}`)= tag.name
 block cardContent
   table.table.table-borderless.table-sm
     tbody
@@ -23,5 +26,6 @@ block cardContent
         th(scope='row') Id:
         td= task.id
   if isSignedIn()
+    form(action=urlFor('editTask', task.id) method='put')
     a.btn.btn-info.btn-lg.m-2(href=urlFor('editTask', task.id)) Edit
     a.btn.btn-outline-danger.btn-lg.m-2(href=urlFor('deleteTask', task.id)) Delete

@@ -2,12 +2,10 @@ extends /layouts/card.pug
 
 block header
   h1= task.name
+  - const tagColor = 'feb062';
+  each tag in task.tags
+    span.badge.m-1(style=`background-color: #${tagColor}`)= tag.name
 block cardContent
-
-  h4 Are you sure?
-  a.btn.btn-outline-success.btn-lg.m-2(href=urlFor('deleteTask', task.id) data-method='delete' rel='nofollow') Yes, delete
-  a.btn.btn-outline-danger.btn-lg.m-2(href=urlFor('task', task.id)) Cancel
-
   table.table.table-borderless.table-sm
     tbody
       tr
@@ -27,3 +25,6 @@ block cardContent
       tr
         th(scope='row') Id:
         td= task.id
+  h4.display Are you sure?
+  a.btn.btn-outline-success.btn-lg.m-2(href=urlFor('deleteTask', task.id) data-method='delete' rel='nofollow') Yes, delete
+  a.btn.btn-outline-danger.btn-lg.m-2(href=urlFor('task', task.id)) Cancel

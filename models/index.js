@@ -9,13 +9,13 @@ const models = {
   User: sequelize.import('./User.js'),
   Task: sequelize.import('./Task.js'),
   TaskStatus: sequelize.import('./TaskStatus.js'),
-  // Tags: sequelize.import('./tags.js'),
+  Tag: sequelize.import('./Tag.js'),
 };
 
 export const { User } = models;
 export const { Task } = models;
 export const { TaskStatus } = models;
-// export const { Tags } = models;
+export const { Tag } = models;
 
 Object.values(models).forEach(async (model) => {
   if (model.associate) {
