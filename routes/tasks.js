@@ -42,9 +42,9 @@ export default (router) => {
 
       const users = await User.findAll()
         .then(vals => vals.map(el => ({ text: el.fullName, value: el.id })));
-      const statuses = await TaskStatus.findAll()
+      const statuses = await TaskStatus.findAll({ order: [['name', 'ASC']] })
         .then(vals => vals.map(el => ({ text: el.name, value: el.id })));
-      const tags = await Tag.findAll()
+      const tags = await Tag.findAll({ order: [['name', 'ASC']] })
         .then(vals => vals.map(el => ({ text: el.name, value: el.id })));
 
       const viewArgs = {
@@ -122,7 +122,7 @@ export default (router) => {
       const id = Number(ctx.params.id);
       const task = await Task.findById(id, { include: ['creator', 'status', 'assignee', 'tags'] });
 
-      const tags = await Tag.findAll()
+      const tags = await Tag.findAll({ order: [['name', 'ASC']] })
         .then(values => values.map(el => ({ text: el.name, value: el.id })));
 
       const viewArgs = {
@@ -149,6 +149,7 @@ export default (router) => {
             not: task.status.id,
           },
         },
+        order: [['name', 'ASC']],
       }).then(values => values.map(el => ({ text: el.name, value: el.id })));
       const currentAssignee = { value: task.assignee.id, text: task.assignee.fullName };
       const users = await User.findAll({
