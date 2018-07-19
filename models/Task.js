@@ -53,6 +53,7 @@ export default (sequelize, DataTypes) => {
     const preFilteredTasks = await Task.findAll({
       where: preparedFilters,
       include: ['creator', 'status', 'assignee', 'tags'],
+      order: [['name', 'ASC']],
     });
 
     return tagId ? filterByTagId(preFilteredTasks) : preFilteredTasks;

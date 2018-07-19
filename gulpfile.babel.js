@@ -17,12 +17,14 @@ gulp.task('console', () => {
 gulp.task('initDb', async () => {
   const { sequelize, TaskStatus } = container.db;
   await sequelize.sync({ force: true });
+
   await TaskStatus.bulkCreate([
     { name: 'new' },
     { name: 'in work' },
     { name: 'in testing' },
     { name: 'completed' },
   ]);
+
   await sequelize.close();
 });
 

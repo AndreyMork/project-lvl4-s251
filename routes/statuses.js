@@ -4,7 +4,7 @@ import { buildFormObj, buildFlashMsg } from '../lib';
 export default (router) => {
   router
     .get('statuses', '/statuses', async (ctx) => {
-      const statuses = await TaskStatus.findAll();
+      const statuses = await TaskStatus.findAll({ order: [['name', 'ASC']] });
 
       const viewArgs = {
         statuses,
@@ -109,6 +109,7 @@ export default (router) => {
         where: {
           status_id: status.id,
         },
+        order: [['name', 'ASC']],
       });
 
       const viewArgs = {

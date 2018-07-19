@@ -31,6 +31,8 @@ const getTags = async (str) => {
   return _.uniqBy(tags.map(([tag]) => tag), tag => tag.id);
 };
 
+const getSelectValues = values => values
+  .map(el => ({ text: el.name || el.fullName, value: el.id }));
 
 export default (router) => {
   router
@@ -41,11 +43,11 @@ export default (router) => {
       const tasks = await Task.findAndFilterAll(filters);
 
       const users = await User.findAll()
-        .then(vals => vals.map(el => ({ text: el.fullName, value: el.id })));
-      const statuses = await TaskStatus.findAll()
-        .then(vals => vals.map(el => ({ text: el.name, value: el.id })));
-      const tags = await Tag.findAll()
-        .then(vals => vals.map(el => ({ text: el.name, value: el.id })));
+        .then(getSelectValues);
+      const statuses = await TaskStatus.findAll({ order: [['name', 'ASC']] })
+        .then(getSelectValues);
+      const tags = await Tag.findAll({ order: [['name', 'ASC']] })
+        .then(getSelectValues);
 
       const viewArgs = {
         tasks,
@@ -104,9 +106,9 @@ export default (router) => {
       const defaultStatus = await TaskStatus.getDefault()
         .then(status => ({ text: status.name, value: status.id }));
       const statuses = await TaskStatus.getNotDefault()
-        .then(values => values.map(el => ({ text: el.name, value: el.id })));
+        .then(getSelectValues);
       const users = await User.findAll()
-        .then(values => values.map(el => ({ text: el.fullName, value: el.id })));
+        .then(getSelectValues);
 
       const viewArgs = {
         statuses,
@@ -122,8 +124,8 @@ export default (router) => {
       const id = Number(ctx.params.id);
       const task = await Task.findById(id, { include: ['creator', 'status', 'assignee', 'tags'] });
 
-      const tags = await Tag.findAll()
-        .then(values => values.map(el => ({ text: el.name, value: el.id })));
+      const tags = await Tag.findAll({ order: [['name', 'ASC']] })
+        .then(getSelectValues);
 
       const viewArgs = {
         task,
@@ -149,7 +151,8 @@ export default (router) => {
             not: task.status.id,
           },
         },
-      }).then(values => values.map(el => ({ text: el.name, value: el.id })));
+        order: [['name', 'ASC']],
+      }).then(getSelectValues);
       const currentAssignee = { value: task.assignee.id, text: task.assignee.fullName };
       const users = await User.findAll({
         where: {
@@ -157,7 +160,7 @@ export default (router) => {
             not: task.assignee.id,
           },
         },
-      }).then(values => values.map(el => ({ text: el.fullName, value: el.id })));
+      }).then(getSelectValues);
       const tagStr = await task.getTags()
         .then(values => values.map(tag => tag.name).join(', '));
 

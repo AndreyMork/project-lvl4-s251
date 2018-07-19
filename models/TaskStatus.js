@@ -26,6 +26,7 @@ export default (sequelize, DataTypes) => {
         not: 'new',
       },
     },
+    order: [['name', 'ASC']],
   });
 
   // TaskStatus.associate = () => {};
