@@ -6,5 +6,5 @@ block cardContent
   .text-center
     h4 Are you sure?
 
-    a.btn.btn-outline-danger.btn-lg.m-2(href=urlFor('users#destroy', user.id) data-method='delete' rel='nofollow') Yes, delete my account
+    a.btn.btn-outline-danger.btn-lg.m-2(href=urlFor('profile#destroy') data-method='delete' rel='nofollow') Yes, delete my account
     a.btn.btn-outline-success.btn-lg.m-2(href=urlFor('users#show', userId)) No
