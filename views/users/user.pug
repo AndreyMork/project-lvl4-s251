@@ -18,6 +18,6 @@ block cardContent
         th(scope='row') Id:
         td= user.id
   if (isLoggedUser)
-    a.btn.btn-info.btn-lg.m-2(href=urlFor('profil#edit')) Edit
+    a.btn.btn-info.btn-lg.m-2(href=urlFor('profile#edit')) Edit
     a.btn.btn-info.btn-lg.m-2(href=urlFor('profilePassword#edit')) Change password   
     a.btn.btn-outline-danger.btn-lg.m-2(href=urlFor('profile#delete')) Delete Account

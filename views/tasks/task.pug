@@ -28,4 +28,4 @@ block cardContent
   if isSignedIn()
     form(action=urlFor('tasks#update', task.id) method='put')
     a.btn.btn-info.btn-lg.m-2(href=urlFor('tasks#edit', task.id)) Edit
-    a.btn.btn-outline-danger.btn-lg.m-2(href=urlFor('task#delete', task.id)) Delete
+    a.btn.btn-outline-danger.btn-lg.m-2(href=urlFor('tasks#delete', task.id)) Delete

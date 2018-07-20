@@ -18,4 +18,4 @@ block content
           td.text-right 
             if isSignedIn()
               a.mr-2(href=urlFor('statuses#edit', status.id)) rename    
-              a.text-danger(href=urlFor('statuses#destroy', status.id)) delete
+              a.text-danger(href=urlFor('statuses#delete', status.id)) delete

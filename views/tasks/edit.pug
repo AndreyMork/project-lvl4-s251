@@ -16,4 +16,4 @@ block cardContent
     +input('description', 'Description', { textarea: true, rows: 5 })
     +tagsInput('tags', 'Input tags separated by comma', tagStr)
     button.btn.btn-outline-success.btn-lg.col-6.m-2(type='submit') Save
-    a.btn.btn-outline-danger.btn-lg.col-5.m-2(href=urlFor('tasks#edit', task.id)) Cancel
+    a.btn.btn-outline-danger.btn-lg.col-5.m-2(href=urlFor('tasks#show', task.id)) Cancel

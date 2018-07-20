@@ -79,7 +79,6 @@ mixin tagsInput(property, labelText, tagStr)
 
 mixin input(property, labelText, options = {})
   - const valueText = _.get(formObj.object, property, '');
-  - console.log(valueText)
   - options.type = _.get(options, 'type', 'text');
   - const labelId = `input for ${property}`;
   - const isInvalid = formObj.errors[property] ? 'is-invalid' : '';
