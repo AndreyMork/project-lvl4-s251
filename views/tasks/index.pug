@@ -5,7 +5,7 @@ block content
     .card-header
       h4.display.text-center Filters
     .card-body.bg-light
-      form(action=urlFor('tasks') method='get')
+      form(action=urlFor('tasks#index') method='get')
         .form-group
           .row
             .col
@@ -16,9 +16,9 @@ block content
               +filterSelect('tagId', 'Tag', tags)
           .text-center
             button.btn.btn-lg.btn-outline-success.m-2(type='submit') Apply
-            a.btn.btn-lg.btn-outline-danger.m-2(href=urlFor('tasks')) Reset
+            a.btn.btn-lg.btn-outline-danger.m-2(href=urlFor('tasks#index')) Reset
             if isSignedIn()
-              a.btn.btn-outline-info.btn-lg.m-2(href=urlFor('tasks', { query: { assignee_id: userId } } )) My Tasks
+              a.btn.btn-outline-info.btn-lg.m-2(href=urlFor('tasks#index', { query: { assignee_id: userId } } )) My Tasks
       table.table.table-hover
         caption List of tasks
         thead
@@ -36,13 +36,13 @@ block content
             tr
               th(scope='row')= counter
               td
-                a(href=urlFor('task', task.id))= task.name
+                a(href=urlFor('tasks#show', task.id))= task.name
               td= task.status.name
               td
-                a(href=urlFor('user', task.assignee.id))= task.assignee.fullName
+                a(href=urlFor('users#show', task.assignee.id))= task.assignee.fullName
               td
                 - const tagColor = 'feb062';
                 each tag in task.tags
                   span.badge.m-1(style=`background-color: #${tagColor}`)= tag.name
               td
-                a(href=urlFor('user', task.creator.id))= task.creator.fullName
+                a(href=urlFor('users#show', task.creator.id))= task.creator.fullName

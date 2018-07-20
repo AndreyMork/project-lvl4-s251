@@ -3,7 +3,7 @@ import { User } from '../models';
 
 export default (router) => {
   router
-    .get('users', '/users', async (ctx) => {
+    .get('users#index', '/users', async (ctx) => {
       const users = await User.findAll();
 
       const viewArgs = {
@@ -13,17 +13,7 @@ export default (router) => {
 
       ctx.render('users', viewArgs);
     })
-    .get('newUser', '/users/new', (ctx) => {
-      const user = User.build();
-
-      const viewArgs = {
-        formObj: buildFormObj(user),
-        pageTitle: 'Sign Up',
-      };
-
-      ctx.render('users/new', viewArgs);
-    })
-    .post('users', '/users', async (ctx) => {
+    .post('users#create', '/users', async (ctx) => {
       const { form } = ctx.request.body;
       const user = User.build(form);
 
@@ -42,7 +32,17 @@ export default (router) => {
         ctx.render('users/new', viewArgs);
       }
     })
-    .get('user', '/users/:id', async (ctx) => {
+    .get('users#new', '/users/new', (ctx) => {
+      const user = User.build();
+
+      const viewArgs = {
+        formObj: buildFormObj(user),
+        pageTitle: 'Sign Up',
+      };
+
+      ctx.render('users/new', viewArgs);
+    })
+    .get('users#show', '/users/:id', async (ctx) => {
       const id = Number(ctx.params.id);
       const user = await User.findById(id);
 

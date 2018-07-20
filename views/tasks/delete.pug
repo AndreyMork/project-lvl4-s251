@@ -14,17 +14,17 @@ block cardContent
       tr
         th(scope='row') Assigned To:
         td
-          a(href=urlFor('user', task.assignee.id))= task.assignee.fullName
+          a(href=urlFor('users#show', task.assignee.id))= task.assignee.fullName
       tr
         th(scope='row') Description:
         td= task.description
       tr
         th(scope='row') Creator:
         td
-          a(href=urlFor('user', task.creator.id))= task.creator.fullName
+          a(href=urlFor('users#show', task.creator.id))= task.creator.fullName
       tr
         th(scope='row') Id:
         td= task.id
   h4.display Are you sure?
-  a.btn.btn-outline-success.btn-lg.m-2(href=urlFor('deleteTask', task.id) data-method='delete' rel='nofollow') Yes, delete
-  a.btn.btn-outline-danger.btn-lg.m-2(href=urlFor('task', task.id)) Cancel
+  a.btn.btn-outline-success.btn-lg.m-2(href=urlFor('tasks#destroy', task.id) data-method='delete' rel='nofollow') Yes, delete
+  a.btn.btn-outline-danger.btn-lg.m-2(href=urlFor('tasks#show', task.id)) Cancel

@@ -3,9 +3,9 @@ import { User } from '../models';
 
 export default (router) => {
   router
-    .get('profileEdit', '/account/profile/edit', async (ctx) => {
+    .get('profile#edit', '/account/profile/edit', async (ctx) => {
       if (!ctx.state.isSignedIn()) {
-        ctx.redirect(router.url('newSession'));
+        ctx.redirect(router.url('session#new'));
         return;
       }
 
@@ -20,7 +20,7 @@ export default (router) => {
 
       ctx.render('users/profile', viewArgs);
     })
-    .put('profileEdit', '/account/profile/edit', async (ctx) => {
+    .put('profile#update', '/account/profile/edit', async (ctx) => {
       if (!ctx.state.isSignedIn()) {
         ctx.throw(401);
         return;
@@ -36,7 +36,7 @@ export default (router) => {
         await user.update({ email, firstName, lastName });
         // TODO: message
         ctx.flash.set(buildFlashMsg('Your profile has been updated', 'success'));
-        ctx.redirect(router.url('user', user.id));
+        ctx.redirect(router.url('users#show', user.id));
       } catch (err) {
         // ctx.flash.set(buildFlahMsg('there was errors', 'danger'));
 
@@ -49,9 +49,9 @@ export default (router) => {
         ctx.render('users/profile', viewArgs);
       }
     })
-    .get('changePassword', '/account/password/edit', async (ctx) => {
+    .get('profilePassword#edit', '/account/password/edit', async (ctx) => {
       if (!ctx.state.isSignedIn()) {
-        ctx.redirect(router.url('newSession'));
+        ctx.redirect(router.url('session#new'));
         return;
       }
 
@@ -66,7 +66,7 @@ export default (router) => {
 
       ctx.render('users/changePassword', viewArgs);
     })
-    .put('changePassword', '/account/password/edit', async (ctx) => {
+    .put('profilePassword#update', '/account/password', async (ctx) => {
       if (!ctx.state.isSignedIn()) {
         ctx.throw(401);
         return;
@@ -80,27 +80,27 @@ export default (router) => {
 
       if (user.passwordDigest !== encrypt(oldPassword)) {
         ctx.flash.set(buildFlashMsg('Password is wrong', 'danger'));
-        ctx.redirect(router.url('changePassword'));
+        ctx.redirect(router.url('profilePassword#edit'));
       } else if (newPassword !== confirmedNewPassword) {
         ctx.flash.set(buildFlashMsg("Password confirmation doesn't match the password", 'danger'));
-        ctx.redirect(router.url('changePassword'));
+        ctx.redirect(router.url('profilePassword#edit'));
       } else {
         try {
           await user.update({ password: newPassword });
 
           ctx.flash.set(buildFlashMsg('Your password was successfully changed', 'success'));
 
-          ctx.redirect(router.url('user', user.id));
+          ctx.redirect(router.url('users#show', user.id));
         } catch (error) {
           // TODO: error message
           ctx.flash.set(buildFlashMsg('There was errors', 'danger'));
-          ctx.redirect(router.url('changePassword'));
+          ctx.redirect(router.url('profilePassword#edit'));
         }
       }
     })
-    .get('userDelete', '/account/profile/delete', async (ctx) => {
+    .get('profile#delete', '/account/profile/delete', async (ctx) => {
       if (!ctx.state.isSignedIn()) {
-        ctx.redirect(router.url('newSession'));
+        ctx.redirect(router.url('session#new'));
         return;
       }
 
@@ -114,7 +114,7 @@ export default (router) => {
 
       ctx.render('users/delete', viewArgs);
     })
-    .delete('userDelete', '/account/profile/delete', async (ctx) => {
+    .delete('profile#destroy', '/account/profile', async (ctx) => {
       if (!ctx.state.isSignedIn()) {
         ctx.throw(401);
         return;

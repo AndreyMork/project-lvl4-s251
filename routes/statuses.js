@@ -3,7 +3,7 @@ import { buildFormObj, buildFlashMsg } from '../lib';
 
 export default (router) => {
   router
-    .get('statuses', '/statuses', async (ctx) => {
+    .get('statuses#index', '/statuses', async (ctx) => {
       const statuses = await TaskStatus.findAll({ order: [['name', 'ASC']] });
 
       const viewArgs = {
@@ -13,7 +13,7 @@ export default (router) => {
 
       ctx.render('statuses', viewArgs);
     })
-    .post('statuses', '/statuses', async (ctx) => {
+    .post('statuses#create', '/statuses', async (ctx) => {
       if (!ctx.state.isSignedIn()) {
         ctx.throw(401);
         return;
@@ -26,7 +26,7 @@ export default (router) => {
       try {
         await task.save();
         ctx.flash.set(buildFlashMsg('Status was successfully created', 'success'));
-        ctx.redirect(router.url('statuses'));
+        ctx.redirect(router.url('statuses#index'));
       } catch (err) {
         // TODO: error message
         const viewArgs = {
@@ -38,9 +38,9 @@ export default (router) => {
         ctx.render('statuses/new', viewArgs);
       }
     })
-    .get('createStatus', '/statuses/new', async (ctx) => {
+    .get('statuses#new', '/statuses/new', async (ctx) => {
       if (!ctx.state.isSignedIn()) {
-        ctx.redirect(router.url('newSession'));
+        ctx.redirect(router.url('session#new'));
         return;
       }
 
@@ -54,9 +54,9 @@ export default (router) => {
 
       ctx.render('statuses/new', viewArgs);
     })
-    .get('editStatus', '/statuses/:id/edit', async (ctx) => {
+    .get('statuses#edit', '/statuses/:id/edit', async (ctx) => {
       if (!ctx.state.isSignedIn()) {
-        ctx.redirect(router.url('newSession'));
+        ctx.redirect(router.url('session#new'));
         return;
       }
 
@@ -71,7 +71,7 @@ export default (router) => {
 
       ctx.render('statuses/edit', viewArgs);
     })
-    .put('editStatus', '/statuses/:id/edit', async (ctx) => {
+    .put('statuses#update', '/statuses/:id', async (ctx) => {
       if (!ctx.state.isSignedIn()) {
         ctx.throw(401);
         return;
@@ -85,7 +85,7 @@ export default (router) => {
       try {
         await status.update(form);
         ctx.flash.set(buildFlashMsg('Status was successfully renamed', 'success'));
-        ctx.redirect(router.url('statuses'));
+        ctx.redirect(router.url('statuses#index'));
       } catch (err) {
         // TODO: error message
         const viewArgs = {
@@ -97,9 +97,9 @@ export default (router) => {
         ctx.render('statuses/edit', viewArgs);
       }
     })
-    .get('deleteStatus', '/statuses/:id/delete', async (ctx) => {
+    .get('statuses#delete', '/statuses/:id/delete', async (ctx) => {
       if (!ctx.state.isSignedIn()) {
-        ctx.redirect(router.url('newSession'));
+        ctx.redirect(router.url('session#new'));
         return;
       }
 
@@ -122,7 +122,7 @@ export default (router) => {
 
       ctx.render('statuses/delete', viewArgs);
     })
-    .delete('deleteStatus', '/statuses/:id/delete', async (ctx) => {
+    .delete('statuses#destroy', '/statuses/:id', async (ctx) => {
       if (!ctx.state.isSignedIn()) {
         ctx.throw(401);
         return;
@@ -140,6 +140,6 @@ export default (router) => {
         console.error(err);
       }
 
-      ctx.redirect(router.url('statuses'));
+      ctx.redirect(router.url('statuses#index'));
     });
 };

@@ -3,7 +3,7 @@ extends /layouts/card.pug
 block header
   h1.text-center= `Edit ${status.name}`
 block cardContent
-  +formFor({ url: urlFor('editStatus', status.id), method: 'put' })
+  +formFor({ url: urlFor('statuses#update', status.id), method: 'put' })
     +input('name', 'Name', { autofocus: true, required: true })
     button.btn.btn-outline-success.btn-lg.col-6.m-2(type='submit') Save
-    a.btn.btn-outline-danger.btn-lg.col-5.m-2(href=urlFor('statuses')) Cancel
+    a.btn.btn-outline-danger.btn-lg.col-5.m-2(href=urlFor('statuses#index')) Cancel

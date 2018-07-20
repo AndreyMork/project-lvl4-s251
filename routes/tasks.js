@@ -36,7 +36,7 @@ const getSelectValues = values => values
 
 export default (router) => {
   router
-    .get('tasks', '/tasks', async (ctx) => {
+    .get('tasks#index', '/tasks', async (ctx) => {
       const { query } = ctx.request;
       const filters = getFilters(query);
 
@@ -60,7 +60,7 @@ export default (router) => {
 
       ctx.render('tasks', viewArgs);
     })
-    .post('tasks', '/tasks', async (ctx) => {
+    .post('tasks#create', '/tasks', async (ctx) => {
       if (!ctx.state.isSignedIn()) {
         ctx.throw(401);
         return;
@@ -83,7 +83,7 @@ export default (router) => {
         await task.addTags(tags);
 
         ctx.flash.set(buildFlashMsg('Task was successfully created', 'success'));
-        ctx.redirect(router.url('tasks'));
+        ctx.redirect(router.url('tasks#index'));
       } catch (err) {
         // TODO: error message
         const viewArgs = {
@@ -95,9 +95,9 @@ export default (router) => {
         ctx.render('tasks/new', viewArgs);
       }
     })
-    .get('createTask', '/tasks/new', async (ctx) => {
+    .get('tasks#new', '/tasks/new', async (ctx) => {
       if (!ctx.state.isSignedIn()) {
-        ctx.redirect(router.url('newSession'));
+        ctx.redirect(router.url('session#new'));
         return;
       }
 
@@ -120,7 +120,7 @@ export default (router) => {
 
       ctx.render('tasks/new', viewArgs);
     })
-    .get('task', '/tasks/:id', async (ctx) => {
+    .get('tasks#show', '/tasks/:id', async (ctx) => {
       const id = Number(ctx.params.id);
       const task = await Task.findById(id, { include: ['creator', 'status', 'assignee', 'tags'] });
 
@@ -135,9 +135,9 @@ export default (router) => {
 
       ctx.render('tasks/task', viewArgs);
     })
-    .get('editTask', '/tasks/:id/edit', async (ctx) => {
+    .get('tasks#edit', '/tasks/:id/edit', async (ctx) => {
       if (!ctx.state.isSignedIn()) {
-        ctx.redirect(router.url('newSession'));
+        ctx.redirect(router.url('session#new'));
         return;
       }
 
@@ -177,7 +177,7 @@ export default (router) => {
 
       ctx.render('tasks/edit', viewArgs);
     })
-    .put('editTask', '/tasks/:id/edit', async (ctx) => {
+    .put('tasks#update', '/tasks/:id/edit', async (ctx) => {
       if (!ctx.state.isSignedIn()) {
         ctx.throw(401);
         return;
@@ -202,7 +202,7 @@ export default (router) => {
         await task.save();
         await task.setTags(tags);
         ctx.flash.set(buildFlashMsg('Task was successfully changed', 'success'));
-        ctx.redirect(router.url('task', task.id));
+        ctx.redirect(router.url('tasks#show', task.id));
       } catch (err) {
         // TODO: error message
         // const viewArgs = {
@@ -211,12 +211,12 @@ export default (router) => {
         // };
         ctx.flash.set(buildFlashMsg(err.message, 'danger'));
 
-        ctx.redirect(router.url('task', task.id));
+        ctx.redirect(router.url('tasks#show', task.id));
       }
     })
-    .get('deleteTask', '/tasks/:id/delete', async (ctx) => {
+    .get('tasks#delete', '/tasks/:id/delete', async (ctx) => {
       if (!ctx.state.isSignedIn()) {
-        ctx.redirect(router.url('newSession'));
+        ctx.redirect(router.url('session#new'));
         return;
       }
 
@@ -230,7 +230,7 @@ export default (router) => {
 
       ctx.render('tasks/delete', viewArgs);
     })
-    .delete('deleteTask', '/tasks/:id/delete', async (ctx) => {
+    .delete('tasks#destroy', '/tasks/:id', async (ctx) => {
       if (!ctx.state.isSignedIn()) {
         ctx.throw(401);
         return;
@@ -248,6 +248,6 @@ export default (router) => {
         console.error(err);
       }
 
-      ctx.redirect(router.url('tasks'));
+      ctx.redirect(router.url('tasks#index'));
     });
 };
