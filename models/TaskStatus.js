@@ -11,25 +11,21 @@ export default (sequelize, DataTypes) => {
       },
     },
   }, {
-    underscored: true,
-  });
-
-  TaskStatus.getDefault = () => TaskStatus.findOne({
-    where: {
-      id: 1,
-    },
-  });
-
-  TaskStatus.getNotDefault = () => TaskStatus.findAll({
-    where: {
-      name: {
-        id: 1,
+    scopes: {
+      defaultValue: {
+        where: {
+          id: 1,
+        },
+      },
+      notDefaultStatuses: {
+        where: {
+          id: { not: 1 },
+        },
+        order: [['name', 'ASC']],
       },
     },
-    order: [['name', 'ASC']],
+    underscored: true,
   });
-
-  // TaskStatus.associate = () => {};
 
   return TaskStatus;
 };
