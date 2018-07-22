@@ -5,8 +5,12 @@ import {
   TaskStatus,
   Tag,
 } from '../models';
-import { buildFormObj, buildFlashMsg, capitalize } from '../lib';
-
+import {
+  buildFormObj,
+  buildFlashMsg,
+  capitalize,
+  requiredAuth,
+} from '../lib';
 
 const getFilters = query => Object.keys(query).reduce((acc, key) => {
   if (!query[key]) {
@@ -15,7 +19,6 @@ const getFilters = query => Object.keys(query).reduce((acc, key) => {
 
   return { ...acc, [key]: Number(query[key]) };
 }, {});
-
 
 const getTags = async (str) => {
   const separatedStr = str.split(',').map(capitalize);
@@ -60,12 +63,7 @@ export default (router) => {
 
       ctx.render('tasks', viewArgs);
     })
-    .post('tasks#create', '/tasks', async (ctx) => {
-      if (!ctx.state.isSignedIn()) {
-        ctx.throw(401);
-        return;
-      }
-
+    .post('tasks#create', '/tasks', requiredAuth, async (ctx) => {
       const { form } = ctx.request.body;
 
       const task = Task.build(form);
@@ -95,12 +93,7 @@ export default (router) => {
         ctx.render('tasks/new', viewArgs);
       }
     })
-    .get('tasks#new', '/tasks/new', async (ctx) => {
-      if (!ctx.state.isSignedIn()) {
-        ctx.redirect(router.url('session#new'));
-        return;
-      }
-
+    .get('tasks#new', '/tasks/new', requiredAuth, async (ctx) => {
       const task = Task.build();
 
       const defaultStatus = await TaskStatus.getDefault()
@@ -135,12 +128,7 @@ export default (router) => {
 
       ctx.render('tasks/task', viewArgs);
     })
-    .get('tasks#edit', '/tasks/:id/edit', async (ctx) => {
-      if (!ctx.state.isSignedIn()) {
-        ctx.redirect(router.url('session#new'));
-        return;
-      }
-
+    .get('tasks#edit', '/tasks/:id/edit', requiredAuth, async (ctx) => {
       const id = Number(ctx.params.id);
       const task = await Task.findById(id, { include: ['creator', 'status', 'assignee', 'tags'] });
 
@@ -177,12 +165,7 @@ export default (router) => {
 
       ctx.render('tasks/edit', viewArgs);
     })
-    .put('tasks#update', '/tasks/:id/edit', async (ctx) => {
-      if (!ctx.state.isSignedIn()) {
-        ctx.throw(401);
-        return;
-      }
-
+    .put('tasks#update', '/tasks/:id/edit', requiredAuth, async (ctx) => {
       const id = Number(ctx.params.id);
       const task = await Task.findById(id);
 
@@ -214,12 +197,7 @@ export default (router) => {
         ctx.redirect(router.url('tasks#show', task.id));
       }
     })
-    .get('tasks#delete', '/tasks/:id/delete', async (ctx) => {
-      if (!ctx.state.isSignedIn()) {
-        ctx.redirect(router.url('session#new'));
-        return;
-      }
-
+    .get('tasks#delete', '/tasks/:id/delete', requiredAuth, async (ctx) => {
       const id = Number(ctx.params.id);
       const task = await Task.findById(id, { include: ['creator', 'status', 'assignee', 'tags'] });
 
@@ -230,12 +208,7 @@ export default (router) => {
 
       ctx.render('tasks/delete', viewArgs);
     })
-    .delete('tasks#destroy', '/tasks/:id', async (ctx) => {
-      if (!ctx.state.isSignedIn()) {
-        ctx.throw(401);
-        return;
-      }
-
+    .delete('tasks#destroy', '/tasks/:id', requiredAuth, async (ctx) => {
       const id = Number(ctx.params.id);
       const task = await Task.findById(id);
 

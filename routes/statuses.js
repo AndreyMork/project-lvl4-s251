@@ -1,5 +1,5 @@
 import { Task, TaskStatus } from '../models';
-import { buildFormObj, buildFlashMsg } from '../lib';
+import { buildFormObj, buildFlashMsg, requiredAuth } from '../lib';
 
 export default (router) => {
   router
@@ -13,12 +13,7 @@ export default (router) => {
 
       ctx.render('statuses', viewArgs);
     })
-    .post('statuses#create', '/statuses', async (ctx) => {
-      if (!ctx.state.isSignedIn()) {
-        ctx.throw(401);
-        return;
-      }
-
+    .post('statuses#create', '/statuses', requiredAuth, async (ctx) => {
       const { form } = ctx.request.body;
 
       const task = TaskStatus.build(form);
@@ -38,12 +33,7 @@ export default (router) => {
         ctx.render('statuses/new', viewArgs);
       }
     })
-    .get('statuses#new', '/statuses/new', async (ctx) => {
-      if (!ctx.state.isSignedIn()) {
-        ctx.redirect(router.url('session#new'));
-        return;
-      }
-
+    .get('statuses#new', '/statuses/new', requiredAuth, async (ctx) => {
       const status = TaskStatus.build();
 
       const viewArgs = {
@@ -54,12 +44,7 @@ export default (router) => {
 
       ctx.render('statuses/new', viewArgs);
     })
-    .get('statuses#edit', '/statuses/:id/edit', async (ctx) => {
-      if (!ctx.state.isSignedIn()) {
-        ctx.redirect(router.url('session#new'));
-        return;
-      }
-
+    .get('statuses#edit', '/statuses/:id/edit', requiredAuth, async (ctx) => {
       const id = Number(ctx.params.id);
       const status = await TaskStatus.findById(id);
 
@@ -71,12 +56,7 @@ export default (router) => {
 
       ctx.render('statuses/edit', viewArgs);
     })
-    .put('statuses#update', '/statuses/:id', async (ctx) => {
-      if (!ctx.state.isSignedIn()) {
-        ctx.throw(401);
-        return;
-      }
-
+    .put('statuses#update', '/statuses/:id', requiredAuth, async (ctx) => {
       const id = Number(ctx.params.id);
       const status = await TaskStatus.findById(id);
 
@@ -97,12 +77,7 @@ export default (router) => {
         ctx.render('statuses/edit', viewArgs);
       }
     })
-    .get('statuses#delete', '/statuses/:id/delete', async (ctx) => {
-      if (!ctx.state.isSignedIn()) {
-        ctx.redirect(router.url('session#new'));
-        return;
-      }
-
+    .get('statuses#delete', '/statuses/:id/delete', requiredAuth, async (ctx) => {
       const id = Number(ctx.params.id);
       const status = await TaskStatus.findById(id);
       const { count, rows } = await Task.findAndCount({
@@ -122,12 +97,7 @@ export default (router) => {
 
       ctx.render('statuses/delete', viewArgs);
     })
-    .delete('statuses#destroy', '/statuses/:id', async (ctx) => {
-      if (!ctx.state.isSignedIn()) {
-        ctx.throw(401);
-        return;
-      }
-
+    .delete('statuses#destroy', '/statuses/:id', requiredAuth, async (ctx) => {
       const id = Number(ctx.params.id);
       const status = await TaskStatus.findById(id);
 

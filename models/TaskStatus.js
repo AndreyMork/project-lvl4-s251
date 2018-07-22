@@ -16,7 +16,7 @@ export default (sequelize, DataTypes) => {
 
   TaskStatus.getDefault = () => TaskStatus.findOne({
     where: {
-      name: 'new',
+      id: 1,
     },
   });
 
