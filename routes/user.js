@@ -1,14 +1,14 @@
-import { buildFormObj, buildFlashMsg, encrypt } from '../lib';
+import {
+  buildFormObj,
+  buildFlashMsg,
+  encrypt,
+  requiredAuth,
+} from '../lib';
 import { User } from '../models';
 
 export default (router) => {
   router
-    .get('profile#edit', '/account/profile/edit', async (ctx) => {
-      if (!ctx.state.isSignedIn()) {
-        ctx.redirect(router.url('session#new'));
-        return;
-      }
-
+    .get('profile#edit', '/account/profile/edit', requiredAuth, async (ctx) => {
       const id = ctx.session.userId;
       const user = await User.findOne({ where: id });
 
@@ -20,12 +20,7 @@ export default (router) => {
 
       ctx.render('users/profile', viewArgs);
     })
-    .put('profile#update', '/account/profile/edit', async (ctx) => {
-      if (!ctx.state.isSignedIn()) {
-        ctx.throw(401);
-        return;
-      }
-
+    .put('profile#update', '/account/profile/edit', requiredAuth, async (ctx) => {
       const id = ctx.session.userId;
       const user = await User.findById(id);
 
@@ -49,12 +44,7 @@ export default (router) => {
         ctx.render('users/profile', viewArgs);
       }
     })
-    .get('profilePassword#edit', '/account/password/edit', async (ctx) => {
-      if (!ctx.state.isSignedIn()) {
-        ctx.redirect(router.url('session#new'));
-        return;
-      }
-
+    .get('profilePassword#edit', '/account/password/edit', requiredAuth, async (ctx) => {
       const id = ctx.session.userId;
       const user = await User.findOne({ where: id });
 
@@ -66,12 +56,7 @@ export default (router) => {
 
       ctx.render('users/changePassword', viewArgs);
     })
-    .put('profilePassword#update', '/account/password', async (ctx) => {
-      if (!ctx.state.isSignedIn()) {
-        ctx.throw(401);
-        return;
-      }
-
+    .put('profilePassword#update', '/account/password', requiredAuth, async (ctx) => {
       const id = ctx.session.userId;
       const user = await User.findOne({ where: id });
 
@@ -98,12 +83,7 @@ export default (router) => {
         }
       }
     })
-    .get('profile#delete', '/account/profile/delete', async (ctx) => {
-      if (!ctx.state.isSignedIn()) {
-        ctx.redirect(router.url('session#new'));
-        return;
-      }
-
+    .get('profile#delete', '/account/profile/delete', requiredAuth, async (ctx) => {
       const id = ctx.session.userId;
       const user = await User.findOne({ where: id });
 
@@ -114,12 +94,7 @@ export default (router) => {
 
       ctx.render('users/delete', viewArgs);
     })
-    .delete('profile#destroy', '/account/profile', async (ctx) => {
-      if (!ctx.state.isSignedIn()) {
-        ctx.throw(401);
-        return;
-      }
-
+    .delete('profile#destroy', '/account/profile', requiredAuth, async (ctx) => {
       const id = ctx.session.userId;
       const user = await User.findById(id);
 

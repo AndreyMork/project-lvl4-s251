@@ -3,7 +3,7 @@ import { buildFormObj, buildFlashMsg, encrypt } from '../lib';
 
 export default (router) => {
   router
-    .get('session#new', '/sessions/new', (ctx) => {
+    .get('session#new', '/session/new', (ctx) => {
       const { email } = ctx.session;
       delete ctx.session.email;
 
