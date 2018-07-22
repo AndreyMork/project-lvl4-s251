@@ -23,7 +23,7 @@ export default (sequelize, DataTypes) => {
   TaskStatus.getNotDefault = () => TaskStatus.findAll({
     where: {
       name: {
-        not: 'new',
+        id: 1,
       },
     },
     order: [['name', 'ASC']],
