@@ -16,12 +16,24 @@ export default (sequelize, DataTypes) => {
       },
     },
   }, {
+    scopes: {
+      sorted: {
+        order: [['name', 'ASC']],
+      },
+    },
     underscored: true,
   });
 
   Tag.associate = async ({ Task }) => {
     Tag.belongsToMany(Task, {
       through: 'task_tag',
+    });
+    Tag.addScope('active', {
+      include: {
+        model: Task,
+        as: 'tasks',
+        required: true,
+      },
     });
   };
 
