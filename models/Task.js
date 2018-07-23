@@ -13,6 +13,11 @@ export default (sequelize, DataTypes) => {
     },
     description: DataTypes.TEXT,
   }, {
+    scopes: {
+      sorted: {
+        order: [['name', 'ASC']],
+      },
+    },
     underscored: true,
   });
 
@@ -22,6 +27,7 @@ export default (sequelize, DataTypes) => {
       foreignKey: {
         allowNull: false,
       },
+      onDelete: 'CASCADE',
     });
 
     Task.belongsTo(User, {
@@ -49,11 +55,9 @@ export default (sequelize, DataTypes) => {
     const taskHasTag = task => task.tags.map(tag => tag.id).includes(tagId);
     const filterByTagId = tasks => tasks
       .filter(task => taskHasTag(task, tagId));
-
-    const preFilteredTasks = await Task.findAll({
+    const preFilteredTasks = await Task.scope('sorted').findAll({
       where: preparedFilters,
       include: ['creator', 'status', 'assignee', 'tags'],
-      order: [['name', 'ASC']],
     });
 
     return tagId ? filterByTagId(preFilteredTasks) : preFilteredTasks;

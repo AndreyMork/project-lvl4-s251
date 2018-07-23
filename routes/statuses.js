@@ -4,7 +4,7 @@ import { buildFormObj, buildFlashMsg, requiredAuth } from '../lib';
 export default (router) => {
   router
     .get('statuses#index', '/statuses', async (ctx) => {
-      const statuses = await TaskStatus.findAll({ order: [['name', 'ASC']] });
+      const statuses = await TaskStatus.scope('sorted').findAll();
 
       const viewArgs = {
         statuses,

@@ -78,25 +78,36 @@ export default (sequelize, DataTypes) => {
           ? `${this.firstName} ${this.lastName}` : this.uuid;
       },
     },
+    scopes: {
+      sorted: {
+        order: [
+          ['first_name', 'ASC'],
+          ['last_name', 'ASC'],
+        ],
+      },
+      withoutCertainIds: ids => ({
+        where: { id: { not: ids } },
+      }),
+    },
     underscored: true,
   });
 
   User.associate = ({ Task }) => {
     User.hasMany(Task, {
-      as: 'createdProjects',
+      as: 'tasks',
       foreignKey: {
-        name: 'creator_id',
+        name: 'assignee_id',
         allowNull: false,
       },
     });
-    // User.hasMany(Task, {
-    //   through: 'user_project',
-    //   as: 'tasks',
-    //   foreignKey: {
-    //     name: 'user_id',
-    //     allowNull: false,
-    //   },
-    // });
+
+    User.addScope('assignees', {
+      include: {
+        model: Task,
+        as: 'tasks',
+        required: true,
+      },
+    });
   };
 
   return User;

@@ -4,7 +4,7 @@ import { User } from '../models';
 export default (router) => {
   router
     .get('users#index', '/users', async (ctx) => {
-      const users = await User.findAll();
+      const users = await User.scope('sorted').findAll();
 
       const viewArgs = {
         users,

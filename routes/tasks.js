@@ -45,11 +45,11 @@ export default (router) => {
 
       const tasks = await Task.findAndFilterAll(filters);
 
-      const users = await User.findAll()
+      const users = await User.scope('assignees', 'sorted').findAll()
         .then(getSelectValues);
-      const statuses = await TaskStatus.findAll({ order: [['name', 'ASC']] })
+      const statuses = await TaskStatus.scope('active', 'sorted').findAll()
         .then(getSelectValues);
-      const tags = await Tag.findAll({ order: [['name', 'ASC']] })
+      const tags = await Tag.scope('active', 'sorted').findAll()
         .then(getSelectValues);
 
       const viewArgs = {
@@ -96,11 +96,11 @@ export default (router) => {
     .get('tasks#new', '/tasks/new', requiredAuth, async (ctx) => {
       const task = Task.build();
 
-      const defaultStatus = await TaskStatus.getDefault()
+      const defaultStatus = await TaskStatus.scope('defaultValue').findOne()
         .then(status => ({ text: status.name, value: status.id }));
-      const statuses = await TaskStatus.getNotDefault()
+      const statuses = await TaskStatus.scope('notDefaultStatuses').findAll()
         .then(getSelectValues);
-      const users = await User.findAll()
+      const users = await User.scope('sorted').findAll()
         .then(getSelectValues);
 
       const viewArgs = {
@@ -117,7 +117,7 @@ export default (router) => {
       const id = Number(ctx.params.id);
       const task = await Task.findById(id, { include: ['creator', 'status', 'assignee', 'tags'] });
 
-      const tags = await Tag.findAll({ order: [['name', 'ASC']] })
+      const tags = await Tag.scope('sorted').findAll()
         .then(getSelectValues);
 
       const viewArgs = {
@@ -133,22 +133,16 @@ export default (router) => {
       const task = await Task.findById(id, { include: ['creator', 'status', 'assignee', 'tags'] });
 
       const currentStatus = { value: task.status.id, text: task.status.name };
-      const statuses = await TaskStatus.findAll({
-        where: {
-          id: {
-            not: task.status.id,
-          },
-        },
-        order: [['name', 'ASC']],
-      }).then(getSelectValues);
+      const statuses = await TaskStatus.scope(
+        { method: ['withoutCertainIds', task.status.id] },
+        'sorted',
+      ).findAll()
+        .then(getSelectValues);
       const currentAssignee = { value: task.assignee.id, text: task.assignee.fullName };
-      const users = await User.findAll({
-        where: {
-          id: {
-            not: task.assignee.id,
-          },
-        },
-      }).then(getSelectValues);
+      const users = await User.scope(
+        { method: ['withoutCertainIds', task.assignee.id] },
+        'sorted',
+      ).findAll().then(getSelectValues);
       const tagStr = await task.getTags()
         .then(values => values.map(tag => tag.name).join(', '));
 
