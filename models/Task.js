@@ -17,6 +17,9 @@ export default (sequelize, DataTypes) => {
       sorted: {
         order: [['name', 'ASC']],
       },
+      withAssociations: {
+        include: [{ all: true }],
+      },
     },
     underscored: true,
   });
@@ -55,9 +58,8 @@ export default (sequelize, DataTypes) => {
     const taskHasTag = task => task.tags.map(tag => tag.id).includes(tagId);
     const filterByTagId = tasks => tasks
       .filter(task => taskHasTag(task, tagId));
-    const preFilteredTasks = await Task.scope('sorted').findAll({
+    const preFilteredTasks = await Task.scope('sorted', 'withAssociations').findAll({
       where: preparedFilters,
-      include: ['creator', 'status', 'assignee', 'tags'],
     });
 
     return tagId ? filterByTagId(preFilteredTasks) : preFilteredTasks;

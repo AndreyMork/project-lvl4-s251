@@ -106,7 +106,7 @@ export default (router) => {
     })
     .get('tasks#show', '/tasks/:id', async (ctx) => {
       const id = Number(ctx.params.id);
-      const task = await Task.findById(id, { include: ['creator', 'status', 'assignee', 'tags'] });
+      const task = await Task.scope('withAssociations').findById(id);
 
       const tags = await Tag.scope('sorted').findAll();
 
@@ -120,7 +120,7 @@ export default (router) => {
     })
     .get('tasks#edit', '/tasks/:id/edit', requiredAuth, async (ctx) => {
       const id = Number(ctx.params.id);
-      const task = await Task.findById(id, { include: ['creator', 'status', 'assignee', 'tags'] });
+      const task = await Task.scope('withAssociations').findById(id);
 
       const currentStatus = task.status;
       const statuses = await TaskStatus.scope(
@@ -182,7 +182,7 @@ export default (router) => {
     })
     .get('tasks#delete', '/tasks/:id/delete', requiredAuth, async (ctx) => {
       const id = Number(ctx.params.id);
-      const task = await Task.findById(id, { include: ['creator', 'status', 'assignee', 'tags'] });
+      const task = await Task.scope('withAssociations').findById(id);
 
       const viewArgs = {
         task,
