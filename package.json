@@ -1,7 +1,7 @@
 {
   "name": "aethra-task-manager",
   "description": "",
-  "version": "1.0.1",
+  "version": "1.0.0",
   "engines": {
     "node": "10.x.x"
   },
@@ -65,7 +65,7 @@
     "style-loader": "^0.21.0",
     "uuid-js": "^0.7.5",
     "validate.js": "^0.12.0",
-    "webpack": "^4.16.1"
+    "webpack": "^4.16.2"
   },
   "devDependencies": {
     "eslint": "^5.2.0",
