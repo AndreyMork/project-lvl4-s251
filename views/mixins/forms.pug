@@ -23,11 +23,11 @@ mixin select(property, labelText, options = {})
       required=options.required
     )
       if (defaultOpt)
-        option(value=defaultOpt.value selected)= defaultOpt.text
+        option(value=defaultOpt.id selected)= defaultOpt.name || defaultOpt.fullName
       else
         option(value='' selected) Choose...
       each opt in values
-        option(value=opt.value)= opt.text
+        option(value=opt.id)= opt.name || opt.fullName
 
         mixin select(property, labelText, options = {})
           - const labelId = `input for ${property}`;
@@ -43,11 +43,11 @@ mixin select(property, labelText, options = {})
               required=options.required
             )
               if (defaultOpt)
-                option(value=defaultOpt.value selected)= defaultOpt.text
+                option(value=defaultOpt.id selected)= defaultOpt.name || defaultOpt.fullName
               else
                 option(value='' selected) Choose...
               each opt in values
-                option(value=opt.value)= opt.text
+                option(value=opt.id)= opt.name || opt.fullName
 
 mixin filterSelect(property, labelText, values)
   - const labelId = `input for ${property}`;
@@ -61,8 +61,8 @@ mixin filterSelect(property, labelText, values)
     )
       option(value='') Any
       each opt in values
-        - const isSelected = opt.value === filters[property];
-        option(value=opt.value selected=isSelected)= opt.text
+        - const isSelected = opt.id === filters[property];
+        option(value=opt.id selected=isSelected)= opt.name || opt.fullName
 
 mixin tagsInput(property, labelText, tagStr)
   - const labelId = `input for ${property}`;
@@ -121,4 +121,4 @@ mixin tagSelector(property, labelText, tags)
     )
       option(value='') Any
       each tag in tags
-        option(value=tag.value)= tag.text
+        option(value=tag.id)= tag.name
