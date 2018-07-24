@@ -3,7 +3,7 @@ extends /layouts/card.pug
 block header
   h1.text-center New Task
 block cardContent
-  +formFor({ url: urlFor('tasks'), method: 'post' })
+  +formFor({ url: urlFor('tasks#create'), method: 'post' })
     +input('name', 'Name', { autofocus: true, required: true })
     +select('statusId', 'Status', {
       defaultOpt: defaultStatus,

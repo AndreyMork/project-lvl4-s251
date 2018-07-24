@@ -5,8 +5,12 @@ import {
   TaskStatus,
   Tag,
 } from '../models';
-import { buildFormObj, buildFlashMsg, capitalize } from '../lib';
-
+import {
+  buildFormObj,
+  buildFlashMsg,
+  capitalize,
+  requiredAuth,
+} from '../lib';
 
 const getFilters = query => Object.keys(query).reduce((acc, key) => {
   if (!query[key]) {
@@ -15,7 +19,6 @@ const getFilters = query => Object.keys(query).reduce((acc, key) => {
 
   return { ...acc, [key]: Number(query[key]) };
 }, {});
-
 
 const getTags = async (str) => {
   const separatedStr = str.split(',').map(capitalize);
@@ -31,23 +34,17 @@ const getTags = async (str) => {
   return _.uniqBy(tags.map(([tag]) => tag), tag => tag.id);
 };
 
-const getSelectValues = values => values
-  .map(el => ({ text: el.name || el.fullName, value: el.id }));
-
 export default (router) => {
   router
-    .get('tasks', '/tasks', async (ctx) => {
+    .get('tasks#index', '/tasks', async (ctx) => {
       const { query } = ctx.request;
       const filters = getFilters(query);
 
       const tasks = await Task.findAndFilterAll(filters);
 
-      const users = await User.findAll()
-        .then(getSelectValues);
-      const statuses = await TaskStatus.findAll({ order: [['name', 'ASC']] })
-        .then(getSelectValues);
-      const tags = await Tag.findAll({ order: [['name', 'ASC']] })
-        .then(getSelectValues);
+      const users = await User.scope('assignees', 'sorted').findAll();
+      const statuses = await TaskStatus.scope('active', 'sorted').findAll();
+      const tags = await Tag.scope('active', 'sorted').findAll();
 
       const viewArgs = {
         tasks,
@@ -60,12 +57,7 @@ export default (router) => {
 
       ctx.render('tasks', viewArgs);
     })
-    .post('tasks', '/tasks', async (ctx) => {
-      if (!ctx.state.isSignedIn()) {
-        ctx.throw(401);
-        return;
-      }
-
+    .post('tasks#create', '/tasks', requiredAuth, async (ctx) => {
       const { form } = ctx.request.body;
 
       const task = Task.build(form);
@@ -83,7 +75,7 @@ export default (router) => {
         await task.addTags(tags);
 
         ctx.flash.set(buildFlashMsg('Task was successfully created', 'success'));
-        ctx.redirect(router.url('tasks'));
+        ctx.redirect(router.url('tasks#index'));
       } catch (err) {
         // TODO: error message
         const viewArgs = {
@@ -95,20 +87,12 @@ export default (router) => {
         ctx.render('tasks/new', viewArgs);
       }
     })
-    .get('createTask', '/tasks/new', async (ctx) => {
-      if (!ctx.state.isSignedIn()) {
-        ctx.redirect(router.url('newSession'));
-        return;
-      }
-
+    .get('tasks#new', '/tasks/new', requiredAuth, async (ctx) => {
       const task = Task.build();
 
-      const defaultStatus = await TaskStatus.getDefault()
-        .then(status => ({ text: status.name, value: status.id }));
-      const statuses = await TaskStatus.getNotDefault()
-        .then(getSelectValues);
-      const users = await User.findAll()
-        .then(getSelectValues);
+      const defaultStatus = await TaskStatus.scope('defaultValue').findOne();
+      const statuses = await TaskStatus.scope('notDefaultStatuses').findAll();
+      const users = await User.scope('sorted').findAll();
 
       const viewArgs = {
         statuses,
@@ -120,12 +104,11 @@ export default (router) => {
 
       ctx.render('tasks/new', viewArgs);
     })
-    .get('task', '/tasks/:id', async (ctx) => {
+    .get('tasks#show', '/tasks/:id', async (ctx) => {
       const id = Number(ctx.params.id);
-      const task = await Task.findById(id, { include: ['creator', 'status', 'assignee', 'tags'] });
+      const task = await Task.scope('withAssociations').findById(id);
 
-      const tags = await Tag.findAll({ order: [['name', 'ASC']] })
-        .then(getSelectValues);
+      const tags = await Tag.scope('sorted').findAll();
 
       const viewArgs = {
         task,
@@ -135,32 +118,20 @@ export default (router) => {
 
       ctx.render('tasks/task', viewArgs);
     })
-    .get('editTask', '/tasks/:id/edit', async (ctx) => {
-      if (!ctx.state.isSignedIn()) {
-        ctx.redirect(router.url('newSession'));
-        return;
-      }
-
+    .get('tasks#edit', '/tasks/:id/edit', requiredAuth, async (ctx) => {
       const id = Number(ctx.params.id);
-      const task = await Task.findById(id, { include: ['creator', 'status', 'assignee', 'tags'] });
+      const task = await Task.scope('withAssociations').findById(id);
 
-      const currentStatus = { value: task.status.id, text: task.status.name };
-      const statuses = await TaskStatus.findAll({
-        where: {
-          id: {
-            not: task.status.id,
-          },
-        },
-        order: [['name', 'ASC']],
-      }).then(getSelectValues);
-      const currentAssignee = { value: task.assignee.id, text: task.assignee.fullName };
-      const users = await User.findAll({
-        where: {
-          id: {
-            not: task.assignee.id,
-          },
-        },
-      }).then(getSelectValues);
+      const currentStatus = task.status;
+      const statuses = await TaskStatus.scope(
+        { method: ['withoutCertainIds', task.status.id] },
+        'sorted',
+      ).findAll();
+      const currentAssignee = task.assignee;
+      const users = await User.scope(
+        { method: ['withoutCertainIds', task.assignee.id] },
+        'sorted',
+      ).findAll();
       const tagStr = await task.getTags()
         .then(values => values.map(tag => tag.name).join(', '));
 
@@ -177,12 +148,7 @@ export default (router) => {
 
       ctx.render('tasks/edit', viewArgs);
     })
-    .put('editTask', '/tasks/:id/edit', async (ctx) => {
-      if (!ctx.state.isSignedIn()) {
-        ctx.throw(401);
-        return;
-      }
-
+    .put('tasks#update', '/tasks/:id/edit', requiredAuth, async (ctx) => {
       const id = Number(ctx.params.id);
       const task = await Task.findById(id);
 
@@ -202,7 +168,7 @@ export default (router) => {
         await task.save();
         await task.setTags(tags);
         ctx.flash.set(buildFlashMsg('Task was successfully changed', 'success'));
-        ctx.redirect(router.url('task', task.id));
+        ctx.redirect(router.url('tasks#show', task.id));
       } catch (err) {
         // TODO: error message
         // const viewArgs = {
@@ -211,17 +177,12 @@ export default (router) => {
         // };
         ctx.flash.set(buildFlashMsg(err.message, 'danger'));
 
-        ctx.redirect(router.url('task', task.id));
+        ctx.redirect(router.url('tasks#show', task.id));
       }
     })
-    .get('deleteTask', '/tasks/:id/delete', async (ctx) => {
-      if (!ctx.state.isSignedIn()) {
-        ctx.redirect(router.url('newSession'));
-        return;
-      }
-
+    .get('tasks#delete', '/tasks/:id/delete', requiredAuth, async (ctx) => {
       const id = Number(ctx.params.id);
-      const task = await Task.findById(id, { include: ['creator', 'status', 'assignee', 'tags'] });
+      const task = await Task.scope('withAssociations').findById(id);
 
       const viewArgs = {
         task,
@@ -230,12 +191,7 @@ export default (router) => {
 
       ctx.render('tasks/delete', viewArgs);
     })
-    .delete('deleteTask', '/tasks/:id/delete', async (ctx) => {
-      if (!ctx.state.isSignedIn()) {
-        ctx.throw(401);
-        return;
-      }
-
+    .delete('tasks#destroy', '/tasks/:id', requiredAuth, async (ctx) => {
       const id = Number(ctx.params.id);
       const task = await Task.findById(id);
 
@@ -248,6 +204,6 @@ export default (router) => {
         console.error(err);
       }
 
-      ctx.redirect(router.url('tasks'));
+      ctx.redirect(router.url('tasks#index'));
     });
 };

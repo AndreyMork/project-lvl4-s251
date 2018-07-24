@@ -3,7 +3,7 @@ extends /layouts/card.pug
 block header
   h1.text-center= `Edit "${task.name}"`
 block cardContent
-  +formFor({ url: urlFor('editTask', task.id), method: 'put' })
+  +formFor({ url: urlFor('tasks#update', task.id), method: 'put' })
     +input('name', 'Name', { autofocus: true, required: true })
     +select('statusId', 'Status', {
       defaultOpt: currentStatus,
@@ -16,4 +16,4 @@ block cardContent
     +input('description', 'Description', { textarea: true, rows: 5 })
     +tagsInput('tags', 'Input tags separated by comma', tagStr)
     button.btn.btn-outline-success.btn-lg.col-6.m-2(type='submit') Save
-    a.btn.btn-outline-danger.btn-lg.col-5.m-2(href=urlFor('task', task.id)) Cancel
+    a.btn.btn-outline-danger.btn-lg.col-5.m-2(href=urlFor('tasks#show', task.id)) Cancel

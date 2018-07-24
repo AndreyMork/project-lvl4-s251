@@ -14,18 +14,18 @@ block cardContent
       tr
         th(scope='row') Assigned To:
         td
-          a(href=urlFor('user', task.assignee.id))= task.assignee.fullName
+          a(href=urlFor('users#show', task.assignee.id))= task.assignee.fullName
       tr
         th(scope='row') Description:
         td= task.description
       tr
         th(scope='row') Creator:
         td
-          a(href=urlFor('user', task.creator.id))= task.creator.fullName
+          a(href=urlFor('users#show', task.creator.id))= task.creator.fullName
       tr
         th(scope='row') Id:
         td= task.id
   if isSignedIn()
-    form(action=urlFor('editTask', task.id) method='put')
-    a.btn.btn-info.btn-lg.m-2(href=urlFor('editTask', task.id)) Edit
-    a.btn.btn-outline-danger.btn-lg.m-2(href=urlFor('deleteTask', task.id)) Delete
+    form(action=urlFor('tasks#update', task.id) method='put')
+    a.btn.btn-info.btn-lg.m-2(href=urlFor('tasks#edit', task.id)) Edit
+    a.btn.btn-outline-danger.btn-lg.m-2(href=urlFor('tasks#delete', task.id)) Delete

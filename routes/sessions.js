@@ -3,7 +3,7 @@ import { buildFormObj, buildFlashMsg, encrypt } from '../lib';
 
 export default (router) => {
   router
-    .get('newSession', '/sessions/new', (ctx) => {
+    .get('session#new', '/session/new', (ctx) => {
       const { email } = ctx.session;
       delete ctx.session.email;
 
@@ -14,7 +14,7 @@ export default (router) => {
 
       ctx.render('sessions/new', viewArgs);
     })
-    .post('session', '/session', async (ctx) => {
+    .post('session#create', '/session', async (ctx) => {
       const { email, password } = ctx.request.body.form;
       const user = await User.findOne({ where: { email } });
 
@@ -27,9 +27,9 @@ export default (router) => {
       // TODO: error message
       ctx.flash.set(buildFlashMsg('Email or password were wrong', 'danger'));
       ctx.session.email = email;
-      ctx.redirect(router.url('newSession'));
+      ctx.redirect(router.url('session#new'));
     })
-    .delete('session', '/session', (ctx) => {
+    .delete('session#destroy', '/session', (ctx) => {
       ctx.session = {};
       ctx.redirect(router.url('root'));
     });

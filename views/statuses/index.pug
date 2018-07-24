@@ -17,5 +17,5 @@ block content
           td= status.name
           td.text-right 
             if isSignedIn()
-              a.mr-2(href=urlFor('editStatus', status.id)) rename    
-              a.text-danger(href=urlFor('deleteStatus', status.id)) delete
+              a.mr-2(href=urlFor('statuses#edit', status.id)) rename    
+              a.text-danger(href=urlFor('statuses#delete', status.id)) delete

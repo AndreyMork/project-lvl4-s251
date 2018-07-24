@@ -1,10 +1,10 @@
 import { Task, TaskStatus } from '../models';
-import { buildFormObj, buildFlashMsg } from '../lib';
+import { buildFormObj, buildFlashMsg, requiredAuth } from '../lib';
 
 export default (router) => {
   router
-    .get('statuses', '/statuses', async (ctx) => {
-      const statuses = await TaskStatus.findAll({ order: [['name', 'ASC']] });
+    .get('statuses#index', '/statuses', async (ctx) => {
+      const statuses = await TaskStatus.scope('sorted').findAll();
 
       const viewArgs = {
         statuses,
@@ -13,12 +13,7 @@ export default (router) => {
 
       ctx.render('statuses', viewArgs);
     })
-    .post('statuses', '/statuses', async (ctx) => {
-      if (!ctx.state.isSignedIn()) {
-        ctx.throw(401);
-        return;
-      }
-
+    .post('statuses#create', '/statuses', requiredAuth, async (ctx) => {
       const { form } = ctx.request.body;
 
       const task = TaskStatus.build(form);
@@ -26,7 +21,7 @@ export default (router) => {
       try {
         await task.save();
         ctx.flash.set(buildFlashMsg('Status was successfully created', 'success'));
-        ctx.redirect(router.url('statuses'));
+        ctx.redirect(router.url('statuses#index'));
       } catch (err) {
         // TODO: error message
         const viewArgs = {
@@ -38,12 +33,7 @@ export default (router) => {
         ctx.render('statuses/new', viewArgs);
       }
     })
-    .get('createStatus', '/statuses/new', async (ctx) => {
-      if (!ctx.state.isSignedIn()) {
-        ctx.redirect(router.url('newSession'));
-        return;
-      }
-
+    .get('statuses#new', '/statuses/new', requiredAuth, async (ctx) => {
       const status = TaskStatus.build();
 
       const viewArgs = {
@@ -54,12 +44,7 @@ export default (router) => {
 
       ctx.render('statuses/new', viewArgs);
     })
-    .get('editStatus', '/statuses/:id/edit', async (ctx) => {
-      if (!ctx.state.isSignedIn()) {
-        ctx.redirect(router.url('newSession'));
-        return;
-      }
-
+    .get('statuses#edit', '/statuses/:id/edit', requiredAuth, async (ctx) => {
       const id = Number(ctx.params.id);
       const status = await TaskStatus.findById(id);
 
@@ -71,12 +56,7 @@ export default (router) => {
 
       ctx.render('statuses/edit', viewArgs);
     })
-    .put('editStatus', '/statuses/:id/edit', async (ctx) => {
-      if (!ctx.state.isSignedIn()) {
-        ctx.throw(401);
-        return;
-      }
-
+    .put('statuses#update', '/statuses/:id', requiredAuth, async (ctx) => {
       const id = Number(ctx.params.id);
       const status = await TaskStatus.findById(id);
 
@@ -85,7 +65,7 @@ export default (router) => {
       try {
         await status.update(form);
         ctx.flash.set(buildFlashMsg('Status was successfully renamed', 'success'));
-        ctx.redirect(router.url('statuses'));
+        ctx.redirect(router.url('statuses#index'));
       } catch (err) {
         // TODO: error message
         const viewArgs = {
@@ -97,12 +77,7 @@ export default (router) => {
         ctx.render('statuses/edit', viewArgs);
       }
     })
-    .get('deleteStatus', '/statuses/:id/delete', async (ctx) => {
-      if (!ctx.state.isSignedIn()) {
-        ctx.redirect(router.url('newSession'));
-        return;
-      }
-
+    .get('statuses#delete', '/statuses/:id/delete', requiredAuth, async (ctx) => {
       const id = Number(ctx.params.id);
       const status = await TaskStatus.findById(id);
       const { count, rows } = await Task.findAndCount({
@@ -122,12 +97,7 @@ export default (router) => {
 
       ctx.render('statuses/delete', viewArgs);
     })
-    .delete('deleteStatus', '/statuses/:id/delete', async (ctx) => {
-      if (!ctx.state.isSignedIn()) {
-        ctx.throw(401);
-        return;
-      }
-
+    .delete('statuses#destroy', '/statuses/:id', requiredAuth, async (ctx) => {
       const id = Number(ctx.params.id);
       const status = await TaskStatus.findById(id);
 
@@ -140,6 +110,6 @@ export default (router) => {
         console.error(err);
       }
 
-      ctx.redirect(router.url('statuses'));
+      ctx.redirect(router.url('statuses#index'));
     });
 };

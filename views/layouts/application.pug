@@ -15,11 +15,11 @@ html(lang='en')
       .collapse.navbar-collapse(id='navbarCollapse')
         ul.navbar-nav.mr-auto
           li.nav-item
-            a.nav-link(href=urlFor('users')) Users
+            a.nav-link(href=urlFor('users#index')) Users
           li.nav-item
-            a.nav-link(href=urlFor('tasks')) Tasks
+            a.nav-link(href=urlFor('tasks#index')) Tasks
           li.nav-item
-            a.nav-link(href=urlFor('statuses')) Statuses
+            a.nav-link(href=urlFor('statuses#index')) Statuses
           li.nav-item
             a.nav-link(href=urlFor('about')) About
         ul.navbar-nav
@@ -33,17 +33,17 @@ html(lang='en')
                 aria-expanded="false"
               ) Create
               .dropdown-menu
-                a.dropdown-item(href=urlFor('createTask')) New Task
-                a.dropdown-item(href=urlFor('createStatus')) New Status
+                a.dropdown-item(href=urlFor('tasks#new')) New Task
+                a.dropdown-item(href=urlFor('statuses#new')) New Status
             li.nav-item
-              a.nav-link(href=urlFor('user', userId)) My Page
+              a.nav-link(href=urlFor('users#show', userId)) My Page
             li.nav-item
-              a.nav-link(href=urlFor('session') data-method='delete' rel='nofollow') Sign Out
+              a.nav-link(href=urlFor('session#destroy') data-method='delete' rel='nofollow') Sign Out
           else
             li.nav-item
-              a.nav-link(href=urlFor('newSession')) Sign In
+              a.nav-link(href=urlFor('session#new')) Sign In
             li.nav-item
-              a.nav-link(href=urlFor('newUser')) Sign Up
+              a.nav-link(href=urlFor('users#new')) Sign Up
     main.container.mt-4
       +flashMessage()
       block content

@@ -11,25 +11,40 @@ export default (sequelize, DataTypes) => {
       },
     },
   }, {
+    scopes: {
+      defaultValue: {
+        where: { id: 1 },
+      },
+      notDefaultStatuses: {
+        where: { id: { not: 1 } },
+      },
+      sorted: {
+        order: [['name', 'ASC']],
+      },
+      withoutCertainIds: ids => ({
+        where: { id: { not: ids } },
+      }),
+    },
     underscored: true,
   });
 
-  TaskStatus.getDefault = () => TaskStatus.findOne({
-    where: {
-      name: 'new',
-    },
-  });
-
-  TaskStatus.getNotDefault = () => TaskStatus.findAll({
-    where: {
-      name: {
-        not: 'new',
+  TaskStatus.associate = ({ Task }) => {
+    TaskStatus.hasMany(Task, {
+      as: 'tasks',
+      foreignKey: {
+        name: 'status_id',
+        allowNull: false,
       },
-    },
-    order: [['name', 'ASC']],
-  });
+    });
 
-  // TaskStatus.associate = () => {};
+    TaskStatus.addScope('active', {
+      include: {
+        model: Task,
+        as: 'tasks',
+        required: true,
+      },
+    });
+  };
 
   return TaskStatus;
 };

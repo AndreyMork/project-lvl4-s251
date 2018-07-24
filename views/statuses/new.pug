@@ -3,7 +3,7 @@ extends /layouts/card.pug
 block header
   h1.text-center New Status
 block cardContent
-  +formFor({ url: urlFor('statuses'), method: 'post' })
+  +formFor({ url: urlFor('statuses#create'), method: 'post' })
     +input('name', 'Name', { autofocus: true, required: true })
     button.btn.btn-outline-success.btn-lg.col-6.m-2(type='submit') Save
     a.btn.btn-outline-danger.btn-lg.col-5.m-2(href=urlFor('root')) Cancel

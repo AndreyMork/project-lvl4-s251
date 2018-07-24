@@ -1,7 +1,7 @@
 {
   "name": "aethra-task-manager",
   "description": "",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "engines": {
     "node": "10.x.x"
   },
@@ -47,13 +47,15 @@
     "koa-flash-simple": "0.0.3",
     "koa-logger": "^3.2.0",
     "koa-methodoverride": "^2.0.0",
+    "koa-passport": "^4.1.0",
     "koa-pug": "^3.0.0-2",
     "koa-router": "^7.4.0",
     "koa-session": "^5.8.2",
     "koa-static": "^4.0.3",
     "koa-webpack": "^3.0.2",
     "lodash": "^4.17.10",
-    "nodemon": "^1.18.2",
+    "nodemon": "^1.18.3",
+    "passport-local": "^1.0.0",
     "pg": "^7.4.3",
     "pg-hstore": "^2.3.2",
     "popper.js": "^1.14.3",
@@ -66,15 +68,15 @@
     "webpack": "^4.16.1"
   },
   "devDependencies": {
-    "eslint": "^5.1.0",
+    "eslint": "^5.2.0",
     "eslint-config-airbnb-base": "^13.0.0",
     "eslint-plugin-import": "^2.13.0",
-    "eslint-plugin-jest": "^21.17.0",
+    "eslint-plugin-jest": "^21.18.0",
     "faker": "^4.1.0",
     "jest": "^23.4.1",
     "jest-cli": "^23.4.1",
     "supertest": "*",
-    "webpack-cli": "^3.0.8"
+    "webpack-cli": "^3.1.0"
   },
   "bugs": {
     "url": "https://github.com/AndreyMork/project-lvl4-s251/issues"
