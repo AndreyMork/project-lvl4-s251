@@ -287,6 +287,12 @@ describe('unathorized', () => {
       .expect(302);
   });
 
+  it('#create task', async () => {
+    await agent
+      .post('/tasks')
+      .expect(401);
+  });
+
   it('#edit task', async () => {
     await agent
       .get('/tasks/1/edit')
@@ -299,10 +305,10 @@ describe('unathorized', () => {
       .expect(302);
   });
 
-  it('#edit status', async () => {
+  it('#create status', async () => {
     await agent
-      .get('/statuses/1/edit')
-      .expect(302);
+      .post('/statuses')
+      .expect(401);
   });
 });
 
@@ -329,5 +335,53 @@ describe('statuses', () => {
     await agent
       .get('/statuses/new')
       .expect(200);
+  });
+
+  it('#create', async () => {
+    await agent
+      .post('/statuses')
+      .send({
+        form: { name: 'new' },
+      })
+      .expect('location', '/statuses');
+  });
+
+  it('#index', async () => {
+    await agent
+      .get('/statuses')
+      .expect(200);
+  });
+
+  it('#edit', async () => {
+    await agent
+      .get('/statuses/1/edit')
+      .expect(200);
+  });
+
+  it('#update', async () => {
+    await agent
+      .put('/statuses/1')
+      .send({
+        form: { name: 'newName' },
+      })
+      .expect('location', '/statuses');
+
+    const status = await db.TaskStatus.findById(1);
+    expect(status.name).toBe('newName');
+  });
+
+  it('#delete', async () => {
+    await agent
+      .get('/statuses/1/delete')
+      .expect(200);
+  });
+
+  it('#destroy', async () => {
+    await agent
+      .delete('/statuses/1')
+      .expect('location', '/statuses');
+
+    const status = await db.TaskStatus.findById(1);
+    expect(status).toBeNull();
   });
 });
