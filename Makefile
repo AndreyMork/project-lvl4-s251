@@ -22,3 +22,9 @@ lint:
 
 test:
 	npm test
+
+watch-test:
+	npm test -- --watch --notify
+
+coverage-test:
+	npm test -- --coverage
