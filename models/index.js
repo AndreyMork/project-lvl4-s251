@@ -1,9 +1,20 @@
 import Sequelize from 'sequelize';
 
-const sequelize = new Sequelize(process.env.DATABASE_URL, {
-  operatorsAliases: Sequelize.Op,
-  snakecase: true,
-});
+let sequelize;
+if (process.env.NODE_ENV === 'test') {
+  sequelize = new Sequelize({
+    storage: ':memory:',
+    dialect: 'sqlite',
+    operatorsAliases: Sequelize.Op,
+    snakecase: true,
+    logging: false,
+  });
+} else {
+  sequelize = new Sequelize(process.env.DATABASE_URL, {
+    operatorsAliases: Sequelize.Op,
+    snakecase: true,
+  });
+}
 
 const models = {
   User: sequelize.import('./User.js'),
@@ -12,14 +23,9 @@ const models = {
   Tag: sequelize.import('./Tag.js'),
 };
 
-export const { User } = models;
-export const { Task } = models;
-export const { TaskStatus } = models;
-export const { Tag } = models;
-
-Object.values(models).forEach(async (model) => {
+Object.values(models).forEach((model) => {
   if (model.associate) {
-    await model.associate(models);
+    model.associate(models);
   }
 });
 

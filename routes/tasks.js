@@ -1,11 +1,5 @@
 import _ from 'lodash';
 import {
-  User,
-  Task,
-  TaskStatus,
-  Tag,
-} from '../models';
-import {
   buildFormObj,
   buildFlashMsg,
   capitalize,
@@ -20,21 +14,28 @@ const getFilters = query => Object.keys(query).reduce((acc, key) => {
   return { ...acc, [key]: Number(query[key]) };
 }, {});
 
-const getTags = async (str) => {
-  const separatedStr = str.split(',').map(capitalize);
+export default (router, db) => {
+  const {
+    User,
+    Task,
+    TaskStatus,
+    Tag,
+  } = db;
 
-  const tags = await Promise.all(separatedStr
-    .filter(tagStr => tagStr !== '')
-    .map(tagStr => Tag.findOrCreate({
-      where: {
-        name: tagStr,
-      },
-    })));
+  const getTags = async (str) => {
+    const separatedStr = str.split(',').map(capitalize);
 
-  return _.uniqBy(tags.map(([tag]) => tag), tag => tag.id);
-};
+    const tags = await Promise.all(separatedStr
+      .filter(tagStr => tagStr !== '')
+      .map(tagStr => Tag.findOrCreate({
+        where: {
+          name: tagStr,
+        },
+      })));
 
-export default (router) => {
+    return _.uniqBy(tags.map(([tag]) => tag), tag => tag.id);
+  };
+
   router
     .get('tasks#index', '/tasks', async (ctx) => {
       const { query } = ctx.request;

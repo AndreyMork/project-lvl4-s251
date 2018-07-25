@@ -8,6 +8,6 @@ import notFound from './notFound';
 
 const controllers = [pages, user, users, sessions, tasks, statuses, notFound];
 
-export default (router, container) => (
-  controllers.forEach(controller => controller(router, container))
+export default (router, { db }) => (
+  controllers.forEach(controller => controller(router, db))
 );

@@ -18,4 +18,4 @@ jobs:
   - stage: lint
     script: make lint
   - stage: tests
-    script: make test
+    script: make coverage-test
