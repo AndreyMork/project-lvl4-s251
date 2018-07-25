@@ -39,7 +39,7 @@ describe('simple pages', () => {
 describe('session', () => {
   const userData = {
     email: 'test@mail.com',
-    password: 'aaaa',
+    password: 'test',
   };
 
   let server;
@@ -264,5 +264,70 @@ describe('user', () => {
 
     const user = await db.User.findById(1);
     expect(user).toBeNull();
+  });
+});
+
+describe('unathorized', () => {
+  let server;
+  let agent;
+  beforeAll(async () => {
+    server = app().listen();
+    agent = request.agent(server);
+    await db.sequelize.sync({ force: true });
+  });
+
+  afterAll((done) => {
+    server.close();
+    done();
+  });
+
+  it('#new task', async () => {
+    await agent
+      .get('/tasks/new')
+      .expect(302);
+  });
+
+  it('#edit task', async () => {
+    await agent
+      .get('/tasks/1/edit')
+      .expect(302);
+  });
+
+  it('#new status', async () => {
+    await agent
+      .get('/statuses/new')
+      .expect(302);
+  });
+
+  it('#edit status', async () => {
+    await agent
+      .get('/statuses/1/edit')
+      .expect(302);
+  });
+});
+
+describe('statuses', () => {
+  let server;
+  let agent;
+  beforeAll(async () => {
+    server = app().listen();
+    agent = request.agent(server);
+    await db.sequelize.sync({ force: true });
+    const user = { email: 'test@mail.com', password: 'test' };
+    await db.User.create(user);
+    await agent
+      .post('/session')
+      .send({ form: user });
+  });
+
+  afterAll((done) => {
+    server.close();
+    done();
+  });
+
+  it('#new', async () => {
+    await agent
+      .get('/statuses/new')
+      .expect(200);
   });
 });
