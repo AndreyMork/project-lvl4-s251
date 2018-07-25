@@ -1,7 +1,8 @@
 import { buildFormObj, buildFlashMsg } from '../lib';
-import { User } from '../models';
 
-export default (router) => {
+export default (router, db) => {
+  const { User } = db;
+
   router
     .get('users#index', '/users', async (ctx) => {
       const users = await User.scope('sorted').findAll();

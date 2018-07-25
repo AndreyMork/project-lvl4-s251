@@ -15,7 +15,7 @@ import Pug from 'koa-pug';
 // import koaWebpack from 'koa-webpack';
 import Rollbar from 'rollbar';
 
-import addRoutes from './routes';
+// import addRoutes from './routes';
 import container from './container';
 // import webpackConfig from './webpack.config.babel';
 
@@ -53,7 +53,7 @@ export default () => {
   // }
 
   const router = new Router();
-  addRoutes(router, container);
+  container.addRoutes(router, container);
   app.use(router.allowedMethods());
   app.use(router.routes());
 
@@ -78,6 +78,5 @@ export default () => {
     ],
   });
   pug.use(app);
-
   return app;
 };

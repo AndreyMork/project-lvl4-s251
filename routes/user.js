@@ -4,9 +4,10 @@ import {
   encrypt,
   requiredAuth,
 } from '../lib';
-import { User } from '../models';
 
-export default (router) => {
+export default (router, db) => {
+  const { User } = db;
+
   router
     .get('profile#edit', '/account/profile/edit', requiredAuth, async (ctx) => {
       const id = ctx.session.userId;
@@ -20,15 +21,14 @@ export default (router) => {
 
       ctx.render('users/profile', viewArgs);
     })
-    .put('profile#update', '/account/profile/edit', requiredAuth, async (ctx) => {
+    .put('profile#update', '/account/profile', requiredAuth, async (ctx) => {
       const id = ctx.session.userId;
       const user = await User.findById(id);
 
       const { form } = ctx.request.body;
-      const { email, firstName, lastName } = form;
 
       try {
-        await user.update({ email, firstName, lastName });
+        await user.update(form, { fields: ['email', 'firstName', 'lastName'] });
         // TODO: message
         ctx.flash.set(buildFlashMsg('Your profile has been updated', 'success'));
         ctx.redirect(router.url('users#show', user.id));

@@ -1,7 +1,8 @@
-import { Task, TaskStatus } from '../models';
 import { buildFormObj, buildFlashMsg, requiredAuth } from '../lib';
 
-export default (router) => {
+export default (router, db) => {
+  const { TaskStatus, Task } = db;
+
   router
     .get('statuses#index', '/statuses', async (ctx) => {
       const statuses = await TaskStatus.scope('sorted').findAll();
@@ -80,11 +81,10 @@ export default (router) => {
     .get('statuses#delete', '/statuses/:id/delete', requiredAuth, async (ctx) => {
       const id = Number(ctx.params.id);
       const status = await TaskStatus.findById(id);
-      const { count, rows } = await Task.findAndCount({
+      const { count, rows } = await Task.scope('sorted').findAndCount({
         where: {
           status_id: status.id,
         },
-        order: [['name', 'ASC']],
       });
 
       const viewArgs = {

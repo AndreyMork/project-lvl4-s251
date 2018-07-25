@@ -1,7 +1,8 @@
-import { User } from '../models';
 import { buildFormObj, buildFlashMsg, encrypt } from '../lib';
 
-export default (router) => {
+export default (router, db) => {
+  const { User } = db;
+
   router
     .get('session#new', '/session/new', (ctx) => {
       const { email } = ctx.session;
