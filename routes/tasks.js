@@ -149,7 +149,7 @@ export default (router, db) => {
 
       ctx.render('tasks/edit', viewArgs);
     })
-    .put('tasks#update', '/tasks/:id/edit', requiredAuth, async (ctx) => {
+    .put('tasks#update', '/tasks/:id', requiredAuth, async (ctx) => {
       const id = Number(ctx.params.id);
       const task = await Task.findById(id);
 
