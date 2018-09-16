@@ -1,6 +1,8 @@
 # Task manager
 > [app](https://aethra-task-manager.herokuapp.com/)
 
+*May take 30sec to load due to free heroku hosting plan.*
+
 [![Maintainability](https://api.codeclimate.com/v1/badges/f002db60ec856a2efe3d/maintainability)](https://codeclimate.com/github/AndreyMork/task-manager/maintainability)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/f002db60ec856a2efe3d/test_coverage)](https://codeclimate.com/github/AndreyMork/task-manager/test_coverage)
 
