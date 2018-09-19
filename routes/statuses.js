@@ -48,6 +48,11 @@ export default (router, db) => {
     .get('statuses#edit', '/statuses/:id/edit', requiredAuth, async (ctx) => {
       const id = Number(ctx.params.id);
       const status = await TaskStatus.findById(id);
+      if (!status) {
+        ctx.flash.set(buildFlashMsg(`A status with id=${id} doesn't exist`, 'warning'));
+        ctx.redirect(router.url('statuses#index'));
+        return;
+      }
 
       const viewArgs = {
         status,
@@ -81,6 +86,13 @@ export default (router, db) => {
     .get('statuses#delete', '/statuses/:id/delete', requiredAuth, async (ctx) => {
       const id = Number(ctx.params.id);
       const status = await TaskStatus.findById(id);
+
+      if (!status) {
+        ctx.flash.set(buildFlashMsg(`A status with id=${id} doesn't exist`, 'warning'));
+        ctx.redirect(router.url('statuses#index'));
+        return;
+      }
+
       const { count, rows } = await Task.scope('sorted').findAndCount({
         where: {
           status_id: status.id,
