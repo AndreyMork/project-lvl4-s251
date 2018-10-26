@@ -3,16 +3,21 @@ addons:
     repo_token:
       secure: qZTf4VKNnOA5hRBLzr/EvNerWc+ndw04UL7fbQ1Lar8J2+QReykGdLXWIDeNkb2Kz5i0gCVzpLxViZiy4/z+Vvevla352dviCBxOh/zrXFlCGePDZxoDlSYME4dBHopQZSj/Jko+qF3/o1eKF+WFlYlN6lgZG8nUaBiKlQrJegYVbMmj3k16aARzUeq8unnEOz7YUgAqjeg5t1OxttpmsP4VGGPjMmhTG3JeDcTzDI6HR98Ui0hE2KnCuYlI29WgX4Euf/le5QzD6EOuejLMhtawyTv8z13RHYAnc+jwP3DyXb3UU3F7N0FrSDHdCRWG/zCTlh+3D/mxrwOmJWctVmGBEuW6uQq2OeZw81Sjt/5MXG6+JImVuf2uTcrSRxbntKATIrQEj9JI4uXY1S4jh9LGhj7toIpEevsQ8hc2Jtyv5XVAGhqiUbV2U/zrEzucozyZ56say1+hQ5VR/bHQvpvAyz7bHdKwbICM8OKHJDD3hikCzyM2JsGzPguuB4JVtNZMlBj/1iZe9li8hxKtlO2A/7O+WBno6vklaIlmXcj3oEBWTh6olvEZmzPRyIPxNwLCYayXP7GV6pjHW4WJ38IUeUBCKwrZjQt8HgTXwCTBVGyyrpYFkQolB9B36hStDfa7a9uYRJ+3HdmohiDqMMX4+T/HR1a5zMMevwWRHsM=
 language: node_js
+
 node_js:
-- node
+  - node
+
 before_script:
 # - psql -c 'create database travis_ci_test;' -U postgres
-- npm install codeclimate-test-reporter -g
+  - npm install codeclimate-test-reporter -g
+
 after_script:
-- codeclimate-test-reporter <./coverage/lcov.info
+  - codeclimate-test-reporter <./coverage/lcov.info
+
 cache:
   directories:
-  - node_modules
+    - node_modules
+
 jobs:
   include:
   # - stage: lint
