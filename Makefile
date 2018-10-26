@@ -1,8 +1,8 @@
 start:
-	DEBUG="task-manager:*" npm run nodemon -- --watch '.' --ext '.js' --exec npm run gulp -- server
+	DEBUG="task-manager:*" npx nodemon --watch '.' --ext '.js' --exec npx gulp server
 
 gulp-console:
-	npm run gulp console
+	npx gulp console
 
 install:
 	npm install
@@ -11,11 +11,8 @@ build:
 	rm -rf dist
 	npm run build
 
-publish:
-	npm publish
-
 lint:
-	npm run eslint .
+	npx eslint .
 
 test:
 	npm test
