@@ -6,33 +6,27 @@
     "node": "10.x.x"
   },
   "scripts": {
-    "gulp": "gulp",
     "start": "gulp server",
-    "nodemon": "nodemon",
-    "babel-node": "babel-node",
     "test": "jest",
-    "eslint": "eslint",
-    "webpack": "webpack",
-    "build": "npm run webpack -- -p --env production",
+    "build": "npx webpack -p --env production",
     "postinstall": "npm run build"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/AndreyMork/task-manager"
+    "url": "https://github.com/AndreyMork/task-manager.git"
   },
+  "bugs": {
+    "url": "https://github.com/AndreyMork/task-manager/issues"
+  },
+  "homepage": "https://github.com/AndreyMork/task-manager#readme",
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@babel/polyfill": "^7.0.0",
+    "@babel/register": "^7.0.0",
+    "@babel/runtime": "^7.1.2",
     "autoprefixer": "^8.6.5",
-    "babel-cli": "*",
-    "babel-core": "*",
-    "babel-eslint": "^8.2.6",
-    "babel-jest": "^23.6.0",
     "babel-loader": "^7.1.5",
-    "babel-polyfill": "*",
-    "babel-preset-env": "^1.7.0",
-    "babel-preset-stage-0": "*",
-    "babel-register": "^6.26.0",
     "bootstrap": "^4.1.3",
     "css-loader": "^0.28.11",
     "debug": "^3.2.6",
@@ -43,7 +37,7 @@
     "jest-supertest-matchers": "0.0.1",
     "jquery": "^3.3.1",
     "jquery-ujs": "^1.2.2",
-    "koa": "^2.5.3",
+    "koa": "^2.6.1",
     "koa-bodyparser": "^4.2.1",
     "koa-flash-simple": "0.0.3",
     "koa-logger": "^3.2.0",
@@ -55,33 +49,44 @@
     "koa-static": "^4.0.3",
     "koa-webpack": "^3.0.2",
     "lodash": "^4.17.11",
-    "nodemon": "^1.18.4",
+    "nodemon": "^1.18.5",
     "passport-local": "^1.0.0",
     "pg": "^7.5.0",
     "pg-hstore": "^2.3.2",
     "popper.js": "^1.14.4",
     "precss": "^3.1.2",
-    "rollbar": "^2.4.7",
-    "sequelize": "^4.39.0",
-    "sqlite3": "^4.0.2",
+    "rollbar": "^2.5.0",
+    "sequelize": "^4.41.0",
+    "sqlite3": "^4.0.3",
     "style-loader": "^0.21.0",
     "uuid-js": "^0.7.5",
     "validate.js": "^0.12.0",
-    "webpack": "^4.20.2"
+    "webpack": "^4.23.1"
   },
   "devDependencies": {
+    "@babel/cli": "^7.1.2",
+    "@babel/core": "^7.1.2",
+    "@babel/node": "^7.0.0",
+    "@babel/plugin-proposal-export-default-from": "^7.0.0",
+    "@babel/plugin-proposal-export-namespace-from": "^7.0.0",
+    "@babel/plugin-proposal-nullish-coalescing-operator": "^7.0.0",
+    "@babel/plugin-proposal-numeric-separator": "^7.0.0",
+    "@babel/plugin-proposal-optional-chaining": "^7.0.0",
+    "@babel/plugin-proposal-pipeline-operator": "^7.0.0",
+    "@babel/plugin-proposal-unicode-property-regex": "^7.0.0",
+    "@babel/plugin-transform-runtime": "^7.1.0",
+    "@babel/preset-env": "^7.1.0",
+    "babel-core": "^7.0.0-bridge.0",
+    "babel-eslint": "^10.0.1",
+    "babel-jest": "^23.6.0",
     "eslint": "^5.7.0",
     "eslint-config-airbnb-base": "^13.1.0",
     "eslint-plugin-import": "^2.14.0",
-    "eslint-plugin-jest": "^21.25.0",
-    "faker": "^4.1.0",
+    "eslint-plugin-jest": "^21.26.0",
     "jest": "^23.6.0",
     "jest-cli": "^23.6.0",
+    "faker": "^4.1.0",
     "supertest": "^3.3.0",
     "webpack-cli": "^3.1.2"
-  },
-  "bugs": {
-    "url": "https://github.com/AndreyMork/task-manager/issues"
-  },
-  "homepage": "https://github.com/AndreyMork/task-manager#readme"
+  }
 }
