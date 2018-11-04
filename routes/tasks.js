@@ -107,7 +107,18 @@ export default (router, db) => {
     })
     .get('tasks#show', '/tasks/:id', async (ctx) => {
       const id = Number(ctx.params.id);
+      if (Number.isNaN(id)) {
+        ctx.status = 404;
+        ctx.render('pages/notFound', { pageTitle: 'Not Found' });
+        return;
+      }
+
       const task = await Task.scope('withAssociations').findById(id);
+      if (!task) {
+        ctx.status = 404;
+        ctx.render('pages/notFound', { pageTitle: 'Not Found' });
+        return;
+      }
 
       const tags = await Tag.scope('sorted').findAll();
 
@@ -121,7 +132,18 @@ export default (router, db) => {
     })
     .get('tasks#edit', '/tasks/:id/edit', requiredAuth, async (ctx) => {
       const id = Number(ctx.params.id);
+      if (Number.isNaN(id)) {
+        ctx.status = 404;
+        ctx.render('pages/notFound', { pageTitle: 'Not Found' });
+        return;
+      }
+
       const task = await Task.scope('withAssociations').findById(id);
+      if (!task) {
+        ctx.status = 404;
+        ctx.render('pages/notFound', { pageTitle: 'Not Found' });
+        return;
+      }
 
       const currentStatus = task.status;
       const statuses = await TaskStatus.scope(
@@ -151,7 +173,18 @@ export default (router, db) => {
     })
     .put('tasks#update', '/tasks/:id', requiredAuth, async (ctx) => {
       const id = Number(ctx.params.id);
-      const task = await Task.findById(id);
+      if (Number.isNaN(id)) {
+        ctx.status = 404;
+        ctx.render('pages/notFound', { pageTitle: 'Not Found' });
+        return;
+      }
+
+      const task = await Task.scope('withAssociations').findById(id);
+      if (!task) {
+        ctx.status = 404;
+        ctx.render('pages/notFound', { pageTitle: 'Not Found' });
+        return;
+      }
 
       const { form } = ctx.request.body;
 
@@ -183,7 +216,18 @@ export default (router, db) => {
     })
     .get('tasks#delete', '/tasks/:id/delete', requiredAuth, async (ctx) => {
       const id = Number(ctx.params.id);
+      if (Number.isNaN(id)) {
+        ctx.status = 404;
+        ctx.render('pages/notFound', { pageTitle: 'Not Found' });
+        return;
+      }
+
       const task = await Task.scope('withAssociations').findById(id);
+      if (!task) {
+        ctx.status = 404;
+        ctx.render('pages/notFound', { pageTitle: 'Not Found' });
+        return;
+      }
 
       const viewArgs = {
         task,
@@ -194,7 +238,18 @@ export default (router, db) => {
     })
     .delete('tasks#destroy', '/tasks/:id', requiredAuth, async (ctx) => {
       const id = Number(ctx.params.id);
-      const task = await Task.findById(id);
+      if (Number.isNaN(id)) {
+        ctx.status = 404;
+        ctx.render('pages/notFound', { pageTitle: 'Not Found' });
+        return;
+      }
+
+      const task = await Task.scope('withAssociations').findById(id);
+      if (!task) {
+        ctx.status = 404;
+        ctx.render('pages/notFound', { pageTitle: 'Not Found' });
+        return;
+      }
 
       try {
         await task.destroy();

@@ -45,7 +45,18 @@ export default (router, db) => {
     })
     .get('users#show', '/users/:id', async (ctx) => {
       const id = Number(ctx.params.id);
+      if (Number.isNaN(id)) {
+        ctx.status = 404;
+        ctx.render('pages/notFound', { pageTitle: 'Not Found' });
+        return;
+      }
+
       const user = await User.findById(id);
+      if (!user) {
+        ctx.status = 404;
+        ctx.render('pages/notFound', { pageTitle: 'Not Found' });
+        return;
+      }
 
       const viewArgs = {
         user,
