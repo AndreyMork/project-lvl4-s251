@@ -47,10 +47,15 @@ export default (router, db) => {
     })
     .get('statuses#edit', '/statuses/:id/edit', requiredAuth, async (ctx) => {
       const id = Number(ctx.params.id);
+      if (Number.isNaN(id)) {
+        ctx.status = 404;
+        ctx.render('pages/notFound', { pageTitle: 'Not Found' });
+        return;
+      }
       const status = await TaskStatus.findById(id);
       if (!status) {
-        ctx.flash.set(buildFlashMsg(`A status with id=${id} doesn't exist`, 'warning'));
-        ctx.redirect(router.url('statuses#index'));
+        ctx.status = 404;
+        ctx.render('pages/notFound', { pageTitle: 'Not Found' });
         return;
       }
 
@@ -64,7 +69,17 @@ export default (router, db) => {
     })
     .put('statuses#update', '/statuses/:id', requiredAuth, async (ctx) => {
       const id = Number(ctx.params.id);
+      if (Number.isNaN(id)) {
+        ctx.status = 404;
+        ctx.render('pages/notFound', { pageTitle: 'Not Found' });
+        return;
+      }
       const status = await TaskStatus.findById(id);
+      if (!status) {
+        ctx.status = 404;
+        ctx.render('pages/notFound', { pageTitle: 'Not Found' });
+        return;
+      }
 
       const { form } = ctx.request.body;
 
@@ -85,7 +100,17 @@ export default (router, db) => {
     })
     .get('statuses#delete', '/statuses/:id/delete', requiredAuth, async (ctx) => {
       const id = Number(ctx.params.id);
+      if (Number.isNaN(id)) {
+        ctx.status = 404;
+        ctx.render('pages/notFound', { pageTitle: 'Not Found' });
+        return;
+      }
       const status = await TaskStatus.findById(id);
+      if (!status) {
+        ctx.status = 404;
+        ctx.render('pages/notFound', { pageTitle: 'Not Found' });
+        return;
+      }
 
       if (!status) {
         ctx.flash.set(buildFlashMsg(`A status with id=${id} doesn't exist`, 'warning'));
@@ -111,7 +136,17 @@ export default (router, db) => {
     })
     .delete('statuses#destroy', '/statuses/:id', requiredAuth, async (ctx) => {
       const id = Number(ctx.params.id);
+      if (Number.isNaN(id)) {
+        ctx.status = 404;
+        ctx.render('pages/notFound', { pageTitle: 'Not Found' });
+        return;
+      }
       const status = await TaskStatus.findById(id);
+      if (!status) {
+        ctx.status = 404;
+        ctx.render('pages/notFound', { pageTitle: 'Not Found' });
+        return;
+      }
 
       try {
         await status.destroy();
