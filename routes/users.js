@@ -58,9 +58,13 @@ export default (router, db) => {
         return;
       }
 
+      if (id === ctx.session.userId) {
+        ctx.redirect(router.url('profile#show'));
+        return;
+      }
+
       const viewArgs = {
         user,
-        isLoggedUser: user.id === ctx.session.userId,
         pageTitle: user.fullName,
       };
 

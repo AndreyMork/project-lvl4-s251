@@ -9,6 +9,17 @@ export default (router, db) => {
   const { User } = db;
 
   router
+    .get('profile#show', '/account', requiredAuth, async (ctx) => {
+      const id = ctx.session.userId;
+      const user = await User.findOne({ where: id });
+
+      const viewArgs = {
+        user,
+        pageTitle: user.fullName,
+      };
+
+      ctx.render('profile/index', viewArgs);
+    })
     .get('profile#edit', '/account/profile/edit', requiredAuth, async (ctx) => {
       const id = ctx.session.userId;
       const user = await User.findOne({ where: id });
@@ -19,7 +30,7 @@ export default (router, db) => {
         formObj: buildFormObj(user),
       };
 
-      ctx.render('users/profile', viewArgs);
+      ctx.render('profile/edit', viewArgs);
     })
     .put('profile#update', '/account/profile', requiredAuth, async (ctx) => {
       const id = ctx.session.userId;
@@ -31,7 +42,7 @@ export default (router, db) => {
         await user.update(form, { fields: ['email', 'firstName', 'lastName'] });
         // TODO: message
         ctx.flash.set(buildFlashMsg('Your profile has been updated', 'success'));
-        ctx.redirect(router.url('users#show', user.id));
+        ctx.redirect(router.url('profile#show'));
       } catch (err) {
         // ctx.flash.set(buildFlahMsg('there was errors', 'danger'));
 
@@ -41,7 +52,7 @@ export default (router, db) => {
           formObj: buildFormObj(user, err),
         };
 
-        ctx.render('users/profile', viewArgs);
+        ctx.render('profile/edit', viewArgs);
       }
     })
     .get('profilePassword#edit', '/account/password/edit', requiredAuth, async (ctx) => {
@@ -54,7 +65,7 @@ export default (router, db) => {
         formObj: buildFormObj(user),
       };
 
-      ctx.render('users/changePassword', viewArgs);
+      ctx.render('profile/changePassword', viewArgs);
     })
     .put('profilePassword#update', '/account/password', requiredAuth, async (ctx) => {
       const id = ctx.session.userId;
@@ -75,7 +86,7 @@ export default (router, db) => {
 
           ctx.flash.set(buildFlashMsg('Your password was successfully changed', 'success'));
 
-          ctx.redirect(router.url('users#show', user.id));
+          ctx.redirect(router.url('profile#show'));
         } catch (error) {
           // TODO: error message
           ctx.flash.set(buildFlashMsg('There was errors', 'danger'));
@@ -92,7 +103,7 @@ export default (router, db) => {
         pageTitle: 'Delete Account',
       };
 
-      ctx.render('users/delete', viewArgs);
+      ctx.render('profile/delete', viewArgs);
     })
     .delete('profile#destroy', '/account/profile', requiredAuth, async (ctx) => {
       const id = ctx.session.userId;
