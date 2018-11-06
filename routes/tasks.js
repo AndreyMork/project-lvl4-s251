@@ -4,6 +4,7 @@ import {
   buildFlashMsg,
   capitalize,
   requiredAuth,
+  validateIdInUrl,
 } from '../lib';
 
 const getFilters = query => Object.keys(query).reduce((acc, key) => {
@@ -105,18 +106,13 @@ export default (router, db) => {
 
       ctx.render('tasks/new', viewArgs);
     })
-    .get('tasks#show', '/tasks/:id', async (ctx) => {
+    .get('tasks#show', '/tasks/:id', validateIdInUrl, async (ctx) => {
       const id = Number(ctx.params.id);
-      if (Number.isNaN(id)) {
-        ctx.status = 404;
-        ctx.render('pages/notFound', { pageTitle: 'Not Found' });
-        return;
-      }
 
       const task = await Task.scope('withAssociations').findById(id);
       if (!task) {
-        ctx.status = 404;
-        ctx.render('pages/notFound', { pageTitle: 'Not Found' });
+        ctx.flash.set(buildFlashMsg(`Task with id = ${id} doesn't exist`, 'warning'));
+        ctx.redirect(router.url('tasks#index'));
         return;
       }
 
@@ -130,18 +126,13 @@ export default (router, db) => {
 
       ctx.render('tasks/task', viewArgs);
     })
-    .get('tasks#edit', '/tasks/:id/edit', requiredAuth, async (ctx) => {
+    .get('tasks#edit', '/tasks/:id/edit', validateIdInUrl, requiredAuth, async (ctx) => {
       const id = Number(ctx.params.id);
-      if (Number.isNaN(id)) {
-        ctx.status = 404;
-        ctx.render('pages/notFound', { pageTitle: 'Not Found' });
-        return;
-      }
 
       const task = await Task.scope('withAssociations').findById(id);
       if (!task) {
-        ctx.status = 404;
-        ctx.render('pages/notFound', { pageTitle: 'Not Found' });
+        ctx.flash.set(buildFlashMsg(`Task with id = ${id} doesn't exist`, 'warning'));
+        ctx.redirect(router.url('tasks#index'));
         return;
       }
 
@@ -171,13 +162,8 @@ export default (router, db) => {
 
       ctx.render('tasks/edit', viewArgs);
     })
-    .put('tasks#update', '/tasks/:id', requiredAuth, async (ctx) => {
+    .put('tasks#update', '/tasks/:id', validateIdInUrl, requiredAuth, async (ctx) => {
       const id = Number(ctx.params.id);
-      if (Number.isNaN(id)) {
-        ctx.status = 404;
-        ctx.render('pages/notFound', { pageTitle: 'Not Found' });
-        return;
-      }
 
       const task = await Task.scope('withAssociations').findById(id);
       if (!task) {
@@ -214,13 +200,8 @@ export default (router, db) => {
         ctx.redirect(router.url('tasks#show', task.id));
       }
     })
-    .get('tasks#delete', '/tasks/:id/delete', requiredAuth, async (ctx) => {
+    .get('tasks#delete', '/tasks/:id/delete', validateIdInUrl, requiredAuth, async (ctx) => {
       const id = Number(ctx.params.id);
-      if (Number.isNaN(id)) {
-        ctx.status = 404;
-        ctx.render('pages/notFound', { pageTitle: 'Not Found' });
-        return;
-      }
 
       const task = await Task.scope('withAssociations').findById(id);
       if (!task) {
@@ -236,13 +217,8 @@ export default (router, db) => {
 
       ctx.render('tasks/delete', viewArgs);
     })
-    .delete('tasks#destroy', '/tasks/:id', requiredAuth, async (ctx) => {
+    .delete('tasks#destroy', '/tasks/:id', validateIdInUrl, requiredAuth, async (ctx) => {
       const id = Number(ctx.params.id);
-      if (Number.isNaN(id)) {
-        ctx.status = 404;
-        ctx.render('pages/notFound', { pageTitle: 'Not Found' });
-        return;
-      }
 
       const task = await Task.scope('withAssociations').findById(id);
       if (!task) {
