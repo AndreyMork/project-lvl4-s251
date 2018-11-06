@@ -1,4 +1,9 @@
-import { buildFormObj, buildFlashMsg, requiredAuth } from '../lib';
+import {
+  buildFormObj,
+  buildFlashMsg,
+  requiredAuth,
+  validateIdInUrl,
+} from '../lib';
 
 export default (router, db) => {
   const { TaskStatus, Task } = db;
@@ -45,17 +50,13 @@ export default (router, db) => {
 
       ctx.render('statuses/new', viewArgs);
     })
-    .get('statuses#edit', '/statuses/:id/edit', requiredAuth, async (ctx) => {
+    .get('statuses#edit', '/statuses/:id/edit', validateIdInUrl, requiredAuth, async (ctx) => {
       const id = Number(ctx.params.id);
-      if (Number.isNaN(id)) {
-        ctx.status = 404;
-        ctx.render('pages/notFound', { pageTitle: 'Not Found' });
-        return;
-      }
+
       const status = await TaskStatus.findById(id);
       if (!status) {
-        ctx.status = 404;
-        ctx.render('pages/notFound', { pageTitle: 'Not Found' });
+        ctx.flash.set(buildFlashMsg(`Status with id = ${id} doesn't exist`, 'warning'));
+        ctx.redirect(router.url('statuses#index'));
         return;
       }
 
@@ -67,13 +68,9 @@ export default (router, db) => {
 
       ctx.render('statuses/edit', viewArgs);
     })
-    .put('statuses#update', '/statuses/:id', requiredAuth, async (ctx) => {
+    .put('statuses#update', '/statuses/:id', validateIdInUrl, requiredAuth, async (ctx) => {
       const id = Number(ctx.params.id);
-      if (Number.isNaN(id)) {
-        ctx.status = 404;
-        ctx.render('pages/notFound', { pageTitle: 'Not Found' });
-        return;
-      }
+
       const status = await TaskStatus.findById(id);
       if (!status) {
         ctx.status = 404;
@@ -98,20 +95,10 @@ export default (router, db) => {
         ctx.render('statuses/edit', viewArgs);
       }
     })
-    .get('statuses#delete', '/statuses/:id/delete', requiredAuth, async (ctx) => {
+    .get('statuses#delete', '/statuses/:id/delete', validateIdInUrl, requiredAuth, async (ctx) => {
       const id = Number(ctx.params.id);
-      if (Number.isNaN(id)) {
-        ctx.status = 404;
-        ctx.render('pages/notFound', { pageTitle: 'Not Found' });
-        return;
-      }
-      const status = await TaskStatus.findById(id);
-      if (!status) {
-        ctx.status = 404;
-        ctx.render('pages/notFound', { pageTitle: 'Not Found' });
-        return;
-      }
 
+      const status = await TaskStatus.findById(id);
       if (!status) {
         ctx.flash.set(buildFlashMsg(`A status with id=${id} doesn't exist`, 'warning'));
         ctx.redirect(router.url('statuses#index'));
@@ -134,13 +121,9 @@ export default (router, db) => {
 
       ctx.render('statuses/delete', viewArgs);
     })
-    .delete('statuses#destroy', '/statuses/:id', requiredAuth, async (ctx) => {
+    .delete('statuses#destroy', '/statuses/:id', validateIdInUrl, requiredAuth, async (ctx) => {
       const id = Number(ctx.params.id);
-      if (Number.isNaN(id)) {
-        ctx.status = 404;
-        ctx.render('pages/notFound', { pageTitle: 'Not Found' });
-        return;
-      }
+
       const status = await TaskStatus.findById(id);
       if (!status) {
         ctx.status = 404;

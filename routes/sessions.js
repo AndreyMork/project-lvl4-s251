@@ -17,7 +17,7 @@ export default (router, db) => {
     })
     .post('session#create', '/session', async (ctx) => {
       const { email, password } = ctx.request.body.form;
-      const user = await User.findOne({ where: { email } });
+      const user = await User.findOne({ where: { email: email?.toLowerCase() } });
 
       if (user && user.passwordDigest === encrypt(password)) {
         ctx.session.userId = user.id;

@@ -1,4 +1,4 @@
-import { buildFormObj, buildFlashMsg } from '../lib';
+import { buildFormObj, buildFlashMsg, validateIdInUrl } from '../lib';
 
 export default (router, db) => {
   const { User } = db;
@@ -43,24 +43,23 @@ export default (router, db) => {
 
       ctx.render('users/new', viewArgs);
     })
-    .get('users#show', '/users/:id', async (ctx) => {
+    .get('users#show', '/users/:id', validateIdInUrl, async (ctx) => {
       const id = Number(ctx.params.id);
-      if (Number.isNaN(id)) {
-        ctx.status = 404;
-        ctx.render('pages/notFound', { pageTitle: 'Not Found' });
-        return;
-      }
 
       const user = await User.findById(id);
       if (!user) {
-        ctx.status = 404;
-        ctx.render('pages/notFound', { pageTitle: 'Not Found' });
+        ctx.flash.set(buildFlashMsg(`User with id = ${id} doesn't exist`, 'warning'));
+        ctx.redirect(router.url('users#index'));
+        return;
+      }
+
+      if (id === ctx.session.userId) {
+        ctx.redirect(router.url('profile#show'));
         return;
       }
 
       const viewArgs = {
         user,
-        isLoggedUser: user.id === ctx.session.userId,
         pageTitle: user.fullName,
       };
 
