@@ -36,7 +36,7 @@ html(lang='en')
                 a.dropdown-item(href=urlFor('tasks#new')) New Task
                 a.dropdown-item(href=urlFor('statuses#new')) New Status
             li.nav-item
-              a.nav-link(href=urlFor('users#show', userId)) My Page
+              a.nav-link(href=urlFor('profile#show')) My Page
             li.nav-item
               a.nav-link(href=urlFor('session#destroy') data-method='delete' rel='nofollow') Sign Out
           else
