@@ -1,5 +1,9 @@
-import path from 'path';
-import webpack from 'webpack';
+// QUESTION: Why import syntax stopped working?
+// import path from 'path';
+// import webpack from 'webpack';
+const path = require('path');
+const webpack = require('webpack');
+
 
 module.exports = {
   mode: process.env.NODE_ENV || 'development',
